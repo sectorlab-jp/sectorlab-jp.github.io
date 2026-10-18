@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090e19">
+<meta name="description" content="ゲームラボ（GAME LAB）はダウンロード不要で遊べるブラウザゲームサイト。スマホでもPCでもすぐ遊ぼう。">
+<link rel="canonical" href="https://sectorlab-jp.github.io/">
+<meta property="og:url" content="https://sectorlab-jp.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ゲームラボ | GAME LAB">
+<meta property="og:image" content="https://raw.githubusercontent.com/sectorlab-jp/morasu-na/main/start-art.webp">
+<meta property="og:description" content="ダウンロード不要。ブラウザですぐ遊べるゲーム集。">
+<title>ゲームラボ | GAME LAB</title>
+<style>
+:root{color-scheme:dark;--bg:#090e19;--panel:#131b2c;--line:#27354d;--text:#eef8ff;--muted:#9daec5;--sky:#62f5e0;--accent:#ffac5a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);background:radial-gradient(circle at 10% 0%,#142d43 0%,transparent 34%),radial-gradient(circle at 95% 8%,#271c45 0%,transparent 35%),var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif}a{color:inherit;text-decoration:none}button{font:inherit}a:focus-visible,button:focus-visible{outline:3px solid #6df1e1;outline-offset:3px}.wrap{max-width:1080px;margin:auto;padding:0 24px}.site-header{position:sticky;top:0;z-index:20;background:#09111edc;backdrop-filter:blur(20px);border-bottom:1px solid #ffffff14}.site-header-inner{height:75px;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:inline-flex;gap:11px;align-items:center;font-size:20px;font-weight:900;letter-spacing:.01em}.mark{height:37px;width:37px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#53ffe1,#347cff);color:#061525;box-shadow:0 0 30px #40c9ee3b}.brand span:last-child b{color:#68ecda;font-size:12px;margin-left:7px;letter-spacing:.12em;vertical-align:middle}.site-nav{display:flex;align-items:center;gap:22px;color:#d1dfee;font-size:13px;font-weight:750}.site-nav a:hover{color:#6df4e2}
+.intro{padding:67px 0 43px}.eyebrow{color:var(--sky);font-size:12px;font-weight:850;letter-spacing:.17em}.intro h1{font-size:clamp(38px,7.2vw,76px);letter-spacing:-.07em;line-height:1.15;margin:15px 0}.intro h1 span{background:linear-gradient(110deg,#6ffff1,#81a8ff);-webkit-background-clip:text;background-clip:text;color:transparent}.intro p{font-size:clamp(14px,2.2vw,18px);line-height:1.85;color:#c0cede;margin:0 0 27px}.btn{border:0;cursor:pointer;display:inline-flex;gap:8px;align-items:center;justify-content:center;border-radius:12px;padding:14px 22px;font-weight:850;font-size:15px;transition:transform .15s,background .15s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:#70eddf;color:#062736}.btn-secondary{border:1px solid #3c5d7a;background:#152840;color:#e6faff}.intro-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.section{padding:23px 0 65px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:8px;margin-bottom:22px}.section h2{font-size:clamp(22px,4vw,31px);margin:0;letter-spacing:-.04em}.section-head p{margin:7px 0 0;color:#91b3c9;font-size:13px}.count{padding:7px 12px;font-size:12px;color:#b7d9e6;background:#182c40;border:1px solid #24465d;border-radius:100px}
+.game-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:20px}.game-card{background:#121b2c;border:1px solid #2a3e55;border-radius:20px;overflow:hidden;box-shadow:0 10px 45px #0003}.cover-art{width:100%;aspect-ratio:16/9;display:block;object-fit:cover;background:radial-gradient(circle at center,#25679e,#051728)}.card-content{padding:20px}.card-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.tag{font-size:11px;font-weight:850;letter-spacing:.05em;color:#061626;background:#70f5df;padding:5px 9px;border-radius:5px}.tag-alt{background:#273651;color:#c3d1df}.game-card h3{font-size:clamp(20px,3vw,25px);margin:12px 0 5px}.game-card p{line-height:1.7;color:#abbdd1;font-size:13px;margin:0 0 18px}.game-card .btn{width:100%}.small-column{display:flex;flex-direction:column;gap:20px}.coming{flex:1;min-height:160px;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:26px;background:linear-gradient(130deg,#17273f,#171b30);border:1px dashed #3a4f6d;border-radius:20px}.coming strong{font-size:19px}.coming p{font-size:13px;color:#93a6bb;margin:7px 0 0;line-height:1.6}.coming .icon{font-size:42px;filter:saturate(.55);opacity:.8}.muted-note{padding:16px 20px;background:#101c2c;border:1px solid #2a4054;border-radius:15px;margin-top:22px;line-height:1.7;color:#acc2d3;font-size:13px}
+footer{border-top:1px solid #22334b;padding:28px 0 40px;color:#758ba3;font-size:12px}footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:760px){.site-header-inner{height:63px}.site-nav{gap:14px}.intro{padding:48px 0 25px}.game-grid{grid-template-columns:1fr}.small-column{display:grid;grid-template-columns:1fr 1fr;gap:12px}.coming{padding:17px;min-height:145px}.coming .icon{font-size:31px}.coming strong{font-size:16px}.coming p{font-size:12px}.card-content{padding:17px}}
+@media(max-width:450px){.wrap{padding:0 16px}.brand{font-size:18px}.brand span:last-child b{display:none}.site-nav{font-size:12px;gap:11px}.intro{padding:36px 0 22px}.intro-buttons{display:grid}.intro-buttons .btn{width:100%}.section{padding:18px 0 50px}.small-column{grid-template-columns:1fr}.coming{min-height:120px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="wrap site-header-inner">
+  <a class="brand" href="#top" aria-label="ゲームラボ トップ"><span class="mark" aria-hidden="true">🎮</span><span>ゲームラボ <b>GAME LAB</b></span></a>
+  <nav class="site-nav" aria-label="サイト内メニュー"><a href="#games">ゲーム一覧</a><a href="#about">このサイトについて</a></nav>
+</div></header>
+<main id="top">
+<section class="intro wrap">
+  <div class="eyebrow">FREE BROWSER GAMES</div>
+  <h1>ひらいた瞬間、<br><span>ゲームの時間。</span></h1>
+  
+  <div class="intro-buttons"><a class="btn btn-primary" href="#games">🎮 ゲームを探す <span aria-hidden="true">→</span></a><a class="btn btn-secondary" href="https://sectorlab-jp.github.io/morasu-na/" target="_blank" rel="noopener">今すぐ1作目を遊ぶ ↗</a></div>
+</section>
+<section class="section wrap" id="games">
+  <div class="section-head"><div><h2>🎲 ゲーム一覧</h2><p>遊べるゲームを少しずつ追加していくよ。</p></div><span class="count">公開中 1作品</span></div>
+  <div class="game-grid">
+   <article class="game-card">
+    <a href="https://sectorlab-jp.github.io/morasu-na/" aria-label="漏らすな！個人情報！をプレイ" target="_blank" rel="noopener">
+     <img class="cover-art" src="https://raw.githubusercontent.com/sectorlab-jp/morasu-na/main/start-art.webp" alt="漏らすな！個人情報！のサイバー防衛ゲーム扉絵" loading="eager">
+    </a>
+    <div class="card-content"><div class="card-top"><span class="tag">すぐ遊べる</span><span class="tag tag-alt">リズムゲーム</span><span class="tag tag-alt">スマホ横持ち推奨</span></div>
+    <h3>漏らすな！個人情報！</h3>
+    <p>迫りくる企業風ウイルスを、ビートに合わせて防げ！ 5レーンのTAP・HOLDで個人情報を守るリズム防衛ゲーム。</p>
+    <a class="btn btn-primary" href="https://sectorlab-jp.github.io/morasu-na/" target="_blank" rel="noopener">▶ このゲームで遊ぶ</a></div>
+   </article>
+   <div class="small-column">
+    <article class="coming"><div><strong>次のゲーム</strong><p>新作を企画中！<br>お楽しみに。</p><span class="tag tag-alt">COMING SOON</span></div><span class="icon" aria-hidden="true">🕹️</span></article>
+    <article class="coming"><div><strong>さらに次のゲーム</strong><p>ゲームラボの新しい作品が<br>ここに増えていくよ。</p><span class="tag tag-alt">COMING SOON</span></div><span class="icon" aria-hidden="true">🧩</span></article>
+   </div>
+  </div>
+  <aside id="about" class="muted-note">💡 ゲームラボは、インストールなしで気軽に遊べるWebゲームを集める場所。現在は試作公開中。今後、作品が増えたらこの一覧に追加していくよ。</aside>
+</section>
+</main>
+<footer><div class="wrap"><span>© GAME LAB</span><span>ブラウザで遊べる無料ゲームサイト</span></div></footer>
+</body></html>
