@@ -47,10 +47,23 @@
 #red{position:absolute;inset:0;z-index:40;background:#b40025;opacity:0;pointer-events:none}
 @media(max-height:715px){#timeline{bottom:calc(208px + env(safe-area-inset-bottom))}#choices{bottom:calc(57px + env(safe-area-inset-bottom));gap:6px;padding:6px 10px}#compose{height:calc(57px + env(safe-area-inset-bottom))} .choice{min-height:43px;padding:7px 10px}#portrait{top:5.5%;height:77%}}
 @media(max-width:350px){.msg{max-width:66%}#header .tools{gap:11px}#timeline{padding-left:9px;padding-right:9px}.choice{min-height:48px}}
+
+/* Optional browser guidance: same regular browser keeps locally stored memories more reliably. */
+#memory-tip{position:absolute;z-index:7;left:50%;bottom:calc(11px + env(safe-area-inset-bottom));transform:translateX(-50%);border:1px solid #ffe3f3a9;background:#171223c9;color:#ffe8f5;border-radius:99px;padding:8px 13px;white-space:nowrap;font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:0 3px 14px #130b249c;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+#memory-tip:active{background:#483149e8}
+#browser-guide{position:absolute;z-index:12;inset:0;display:none;align-items:flex-end;justify-content:center;padding:18px 14px calc(18px + env(safe-area-inset-bottom));background:#0b0718b8;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#browser-guide.open{display:flex}
+#browser-guide-panel{width:100%;max-width:430px;background:#292037;border:1px solid #b18ca9;border-radius:22px;padding:21px 18px 17px;color:#ffedf6;box-shadow:0 14px 50px #0008;text-align:center}
+#browser-guide-panel h2{font-size:20px;margin:2px 0 13px;color:#ffd4e9}
+#browser-guide-panel p{font-size:14px;line-height:1.7;margin:0 0 12px}
+#browser-guide-panel .guide-action{background:#3d304a;padding:12px;border-radius:12px;text-align:left;font-size:13px;line-height:1.65;margin:12px 0}
+#browser-guide-panel .guide-note{color:#cdb9d0;font-size:11px;line-height:1.5;margin-bottom:12px}
+#browser-guide-close{width:100%;border:0;border-radius:99px;background:#efabc9;color:#251826;font-weight:800;padding:13px;margin-top:3px}
+@media(min-height:750px){#memory-tip{bottom:calc(16px + env(safe-area-inset-bottom))}}
 </style></head>
 <body>
 <main id="app">
-<section class="screen active" id="title"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div><button id="start" aria-label="はじめる"><span class="fallback-title">ドキドキ彼女！<br><b>大好きな彼女とのLINE</b><br>はじめる ♡</span></button></section>
+<section class="screen active" id="title"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div><button id="start" aria-label="はじめる"><span class="fallback-title">ドキドキ彼女！<br><b>大好きな彼女とのLINE</b><br>はじめる ♡</span></button><button type="button" id="memory-tip" aria-haspopup="dialog" aria-controls="browser-guide">♡ 美咲との思い出を残す？</button><div id="browser-guide" role="dialog" aria-modal="true" aria-labelledby="browser-guide-title"><div id="browser-guide-panel"><h2 id="browser-guide-title">思い出を残すには？ ♡</h2><p>いつも使うブラウザで遊んでね。<br>同じブラウザなら、美咲が前の記録を覚えていられるかも。</p><div id="browser-guide-how" class="guide-action"></div><p class="guide-note">※ X内のブラウザと外部ブラウザでは記録が共有されないことがあるよ。保存はブラウザの設定やデータ削除にも左右されるよ。現在は周回の記憶や名前を使うシークレット機能は制作中。</p><button type="button" id="browser-guide-close">わかった♡ ゲームへ戻る</button></div></div></section>
 <section class="screen" id="scare"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div></section>
 <section class="screen" id="chat"><div class="mist"><img id="portrait" src="./assets/misaki-normal.webp" alt="美咲の表情：通常"></div>
 <header id="header"><button id="back" aria-label="タイトルに戻る"><svg viewBox="0 0 24 24"><path d="m15 4-8 8 8 8"/></svg></button><div id="who"><strong>美咲 ♡</strong><small>オンライン</small></div><div class="tools" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="m15.3 15.3 5 5"/></svg><svg viewBox="0 0 24 24"><path d="M5 4.5c1-.7 2-.5 2.6.2l2.1 2.2c.6.7.6 1.6 0 2.3l-1.2 1.4c1.4 2.3 3.2 4.1 5.5 5.5l1.4-1.2c.7-.6 1.6-.6 2.3 0l2.2 2.1c.7.6.9 1.6.2 2.6l-1.5 1.6c-.8.8-1.8 1.2-3.1.8C10.7 21 3 13.3 2 8.1c-.3-1.2.1-2.3.8-3.1Z"/></svg><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div></header>
@@ -85,6 +98,25 @@ async function intro(){if(busy)return;busy=true;const n=++epoch;white.style.opac
 async function drawScene(n){if(n!==epoch||dead)return;if(step>=story.length){choices.replaceChildren();addMessage('大好き。\nこれからも、ずっと。♡');return}const s=story[step];choices.replaceChildren();for(const m of s.m){if(!await sleep(n,370))return;addMessage(m)}if(n!==epoch||dead)return;s.o.forEach((txt,i)=>{const button=document.createElement('button');button.className='choice';const number=document.createElement('span');number.className='num';number.textContent=String(i+1);const caption=document.createElement('span');caption.className='ctext';caption.textContent=txt;button.append(number,caption);button.addEventListener('click',()=>answer(i));choices.append(button)})}
 async function answer(i){if(busy||dead||step>=story.length)return;busy=true;const n=epoch,s=story[step];choices.replaceChildren();addMessage(s.o[i],true);if(i!==s.c){miss++;mood=miss>=2?-2:-1}else{mood=Math.min(2,mood+1)}setMood();if(!await sleep(n,450))return;if(miss>=2){await lose(n);return}addMessage(i===s.c?s.yes:s.no);step++;if(!await sleep(n,450))return;busy=false;drawScene(n)}
 async function lose(n){dead=true;addMessage('……');if(!await sleep(n,630))return;for(let i=0;i<16;i++){addMessage('、');if(!await sleep(n,135))return}if(!await sleep(n,400))return;addMessage('さよなら。');if(!await sleep(n,790))return;white.style.opacity='1';show(scare);if(!await sleep(n,80))return;white.style.opacity='0';red.style.opacity='.65';if(!await sleep(n,155))return;red.style.opacity='0';black.style.opacity='1';if(!await sleep(n,1150))return;show(chat);el('end').style.display='flex';black.style.opacity='0'}
+const browserGuide=el('browser-guide'),browserGuideTip=el('memory-tip'),browserGuideClose=el('browser-guide-close'),browserGuideHow=el('browser-guide-how');
+(function setupBrowserGuide(){
+ const agent=navigator.userAgent||'';
+ const iphone=/iPhone|iPad|iPod/i.test(agent);
+ const android=/Android/i.test(agent);
+ const inX=/Twitter|TwitterAndroid|Twitter for/i.test(agent);
+ browserGuideHow.textContent=iphone
+   ?'Xアプリで開いた場合は、画面の「…」などのメニューから「ブラウザで開く」を選んで、Safariなど普段使うブラウザで遊んでね。'
+   :android
+   ?'Xアプリで開いた場合は、メニューから「ブラウザで開く」を選んで、Chromeなど普段使うブラウザで遊んでね。'
+   :'PCなら今使っているブラウザでそのまま遊んでOK。別のブラウザや端末に変えると保存記録は共有されないよ。';
+ const openGuide=()=>{browserGuide.classList.add('open');browserGuideClose.focus()};
+ const closeGuide=()=>{browserGuide.classList.remove('open');browserGuideTip.focus()};
+ browserGuideTip.addEventListener('click',openGuide);
+ browserGuideClose.addEventListener('click',closeGuide);
+ browserGuide.addEventListener('click',event=>{if(event.target===browserGuide)closeGuide()});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&browserGuide.classList.contains('open'))closeGuide()});
+ if(inX)openGuide(); // Detection is best-effort; manual guidance stays visible on all devices.
+})();
 el('start').addEventListener('click',intro);el('back').addEventListener('click',reset);el('restart').addEventListener('click',reset);
 document.querySelectorAll('.art').forEach(img=>{img.addEventListener('error',()=>img.closest('.screen').classList.add('noart'))});
 setMood();
