@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#7dc8f1">
+<meta name="description" content="長押しで踏ん張って、離して登ろう！ 無限に伸びるハシゴ、何メートル登れる？ 1本指で遊べるバランスゲーム。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="のぼれ！無限ハシゴ | ゲームラボ">
+<meta property="og:description" content="長押しで踏ん張る。離して登る。押し直して逆から支える！ どこまで登れる？">
+<title>のぼれ！無限ハシゴ | ゲームラボ</title>
+<style>
+:root{color-scheme:light;--ink:#183b53;--blue:#2481b5;--white:#fffdfa;--shadow:0 12px 45px #17496931}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:none}
+body{font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Hiragino Kaku Gothic ProN",system-ui,sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none}
+#game{position:fixed;inset:0;overflow:hidden;background:#85d8ef;touch-action:none}
+#scene{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:absolute;z-index:3;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 14px) 17px 0;pointer-events:none}
+.hudline{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.score{display:flex;align-items:baseline;gap:6px;filter:drop-shadow(0 3px 8px #396a7833)}
+.score .number{font-size:clamp(36px,9vw,52px);line-height:1;font-weight:1000;letter-spacing:-.065em;color:#fff;text-shadow:0 3px 0 #427ba3,0 1px 16px #32668b88;font-variant-numeric:tabular-nums}
+.score .unit{font-weight:900;color:#fff;font-size:16px;text-shadow:0 2px 5px #27618e}
+.tiny-label{font-weight:1000;letter-spacing:.16em;color:#fff;text-shadow:0 2px 6px #40799e;font-size:11px;margin:0 0 5px 2px}
+.righttools{display:flex;gap:7px;pointer-events:auto;align-items:center}
+.pill{border:1.5px solid #ffffffba;background:#ffffffd9;backdrop-filter:blur(12px);box-shadow:0 3px 12px #15547224;border-radius:16px;padding:9px 11px;font-size:11px;font-weight:800;color:#3e7189;white-space:nowrap}
+.pill strong{display:block;font-size:16px;letter-spacing:-.04em;color:#27556e;font-variant-numeric:tabular-nums}
+.iconbtn{width:42px;height:42px;border-radius:15px;border:1.5px solid #ffffffbd;background:#ffffffdc;font-size:20px;box-shadow:0 3px 12px #15547222;color:#305973;cursor:pointer}
+.iconbtn:active,.primary:active{transform:scale(.97)}
+#pauseBtn{display:none}
+.meter{margin:14px auto 0;width:min(235px,66vw);padding:7px 12px 9px;background:#ffffffe2;backdrop-filter:blur(9px);border:1px solid #fff;border-radius:20px;box-shadow:0 3px 12px #1d718526}
+.meterlabel{display:flex;justify-content:space-between;align-items:center;font-weight:850;font-size:10px;color:#4b768a;margin-bottom:7px}
+.meterlabel .bad{color:#df6758}
+.track{height:9px;border-radius:10px;position:relative;background:linear-gradient(90deg,#ec7b76 0%,#e9c672 22%,#8bd8b0 41%,#78d0af 59%,#e9c672 78%,#ec7b76 100%)}
+.track:before{content:"";position:absolute;top:-4px;bottom:-4px;width:2px;left:50%;background:#ffffffcc}
+#needle{position:absolute;left:50%;top:50%;width:17px;height:17px;background:white;border:4px solid #22658d;border-radius:50%;box-shadow:0 2px 5px #2054747b;transform:translate(-50%,-50%);transition:left .08s linear}
+#notice{position:absolute;z-index:4;top:calc(env(safe-area-inset-top,0px) + 150px);left:50%;width:max-content;max-width:95%;text-align:center;transform:translate(-50%,-15px) scale(.95);opacity:0;transition:opacity .22s,transform .22s;pointer-events:none;font-weight:1000;color:#fff;font-size:clamp(21px,6vw,32px);text-shadow:0 3px 0 #37739b,0 0 15px #3a5f8e}
+#notice.show{opacity:1;transform:translate(-50%,0) scale(1)}
+#danger{position:absolute;z-index:3;top:calc(env(safe-area-inset-top,0px) + 185px);left:50%;transform:translateX(-50%);font-size:14px;font-weight:1000;color:#fff;text-shadow:0 2px 3px #af3b39;opacity:0;transition:opacity .15s;pointer-events:none}
+#danger.show{opacity:1;animation:pulse .55s infinite alternate}
+@keyframes pulse{to{transform:translateX(-50%) scale(1.12)}}
+.bottom{position:absolute;z-index:3;bottom:calc(env(safe-area-inset-bottom,0px) + 17px);left:12px;right:12px;display:flex;justify-content:center;pointer-events:none}
+.instruction{padding:12px 16px;min-width:205px;text-align:center;border:2px solid #fff6;border-radius:18px;box-shadow:0 8px 22px #325d7038;background:#fffffff0;color:#28556c;font-size:13px;line-height:1.45;font-weight:900;transition:transform .12s}
+.instruction.holding{background:#ffefcf;color:#af6139;transform:scale(1.04)}
+.overlay{position:absolute;z-index:10;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 19px calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(180deg,#e3faff2e,#5f9ccb44);backdrop-filter:blur(4px)}
+.overlay.hidden{display:none}
+.panel{width:min(405px,100%);padding:30px 23px 23px;background:#fffdf5f5;border:3px solid #fff;border-radius:28px;box-shadow:0 18px 55px #16426f4f,0 5px 0 #e1c59e;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:1000;letter-spacing:.1em;background:#dbf1fc;padding:7px 13px;border-radius:99px;color:#377ca4}
+.emoji{font-size:55px;line-height:1.2;margin:13px 0 4px}
+.panel h1{font-size:clamp(29px,7.7vw,38px);letter-spacing:-.065em;margin:4px 0 6px;color:#244d68;line-height:1.2}
+.panel .lead{margin:8px 0 16px;color:#607d8c;font-size:13px;line-height:1.7;font-weight:700}
+.rules{display:grid;gap:8px;margin:16px 0 20px;text-align:left}
+.rule{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:15px;background:#e8f3f8}
+.rule .symbol{font-size:23px;flex:none;width:35px;text-align:center}
+.rule strong{font-size:13px;display:block;color:#234e64}
+.rule small{display:block;font-size:11px;line-height:1.4;color:#698a9c;margin-top:3px}
+.primary{border:0;border-radius:16px;padding:17px 20px;background:linear-gradient(180deg,#ffbc65,#f58a58);color:#fff;text-shadow:0 2px 1px #c87544;font-weight:1000;font-size:19px;width:100%;box-shadow:0 5px 0 #d16c42,0 12px 23px #dc89664a;cursor:pointer;touch-action:manipulation}
+.secondary{border:0;background:none;color:#618296;font-size:12px;font-weight:850;margin-top:17px;cursor:pointer}
+.resultnum{font-size:clamp(45px,13vw,65px);font-weight:1000;color:#ef9053;letter-spacing:-.06em;line-height:1.1;margin:11px 0;text-shadow:0 3px 0 #ffddb0;font-variant-numeric:tabular-nums}
+.resultnum small{font-size:22px;color:#446e8c}
+.resultzone{font-weight:900;color:#497d98;margin:8px 0 18px}
+.newbest{display:inline-block;border-radius:99px;background:#fff0b4;color:#b67727;font-weight:1000;font-size:12px;padding:7px 13px;margin:0 0 12px}
+#bestBadge{display:none}
+.resultbest{margin:0 0 18px;font-size:13px;color:#718999;font-weight:800}
+#pauseScreen{z-index:11}
+.footerlogo{font-size:10px;font-weight:900;letter-spacing:.12em;color:#8da4af;margin-top:17px}
+@media(min-width:640px){.hud{padding-left:calc(50vw - 285px);padding-right:calc(50vw - 285px)}.bottom{max-width:560px;margin:auto}}
+@media(max-height:580px){.panel{padding:15px 20px}.emoji{display:none}.rules{gap:5px;margin:9px 0}.rule{padding:6px 11px}.panel h1{font-size:26px}.panel .lead{margin:5px 0}.primary{padding:12px}.footerlogo{display:none}}
+</style>
+</head>
+<body>
+<div id="game">
+<canvas id="scene" aria-label="ハシゴを登るゲーム画面"></canvas>
+<header class="hud">
+  <div class="hudline">
+    <div><div class="tiny-label">HEIGHT</div><div class="score"><span class="number" id="height">0.0</span><span class="unit">m</span></div></div>
+    <div class="righttools"><div class="pill">🏆 BEST<strong id="best">0.0m</strong></div><button class="iconbtn" id="soundBtn" aria-label="サウンド切り替え">🔊</button><button class="iconbtn" id="pauseBtn" aria-label="一時停止">Ⅱ</button></div>
+  </div>
+  <div class="meter"><div class="meterlabel"><span>◀ 左に傾く</span><span id="tiltText">バランス</span><span>右に傾く ▶</span></div><div class="track"><div id="needle"></div></div></div>
+</header>
+<div id="notice"></div><div id="danger">⚠️ あぶない！</div>
+<div class="bottom"><div id="instruction" class="instruction">指を離して、どんどん登ろう！</div></div>
+<div class="overlay" id="menu">
+  <div class="panel">
+    <span class="eyebrow">🎮 GAME LAB</span><div class="emoji">🪜💨</div>
+    <h1>のぼれ！<br>無限ハシゴ</h1>
+    <p class="lead">グラグラするハシゴを支えながら<br>空の向こうまで登っちゃおう！</p>
+    <div class="rules">
+      <div class="rule"><span class="symbol">👆</span><span><strong>長押しで踏ん張る</strong><small>傾いた方向から押し返す。登るのはストップ！</small></span></div>
+      <div class="rule"><span class="symbol">🪜</span><span><strong>指を離すと登る！</strong><small>長く登り続けるほどスピードアップ</small></span></div>
+      <div class="rule"><span class="symbol">🔄</span><span><strong>押し直して反対側へ！</strong><small>押しすぎたら離して、逆から支えよう</small></span></div>
+    </div>
+    <button class="primary" id="startBtn">ゲームスタート ▶</button>
+    <div class="footerlogo">1本指のバランスチャレンジ</div>
+  </div>
+</div>
+<div class="overlay hidden" id="over">
+  <div class="panel">
+    <span class="eyebrow">GAME OVER</span><div class="emoji">💫🪜</div>
+    <h1>ああっ！倒れた！</h1>
+    <div class="resultnum"><span id="finalHeight">0.0</span><small>m</small></div>
+    <div class="newbest" id="bestBadge">🏆 NEW RECORD!</div>
+    <div class="resultzone" id="resultZone">地上から出発！</div>
+    <p class="resultbest" id="resultBest">自己ベスト 0.0m</p>
+    <button class="primary" id="retryBtn">もう一回！ 🪜</button>
+    <button class="secondary" id="shareBtn">🔗 記録をシェアする</button>
+  </div>
+</div>
+<div class="overlay hidden" id="pauseScreen">
+  <div class="panel">
+    <div class="emoji">⏸️</div><h1>ちょっと休憩</h1><p class="lead">ハシゴもひと休み。</p>
+    <button class="primary" id="resumeBtn">再開する ▶</button>
+    <button class="secondary" id="homeBtn">タイトルに戻る</button>
+  </div>
+</div>
+</div>
+<script>
+(() => {
+'use strict';
+const $=id=>document.getElementById(id);
+const canvas=$('scene'),ctx=canvas.getContext('2d',{alpha:false});
+const ui={height:$('height'),best:$('best'),needle:$('needle'),tiltText:$('tiltText'),instruction:$('instruction'),notice:$('notice'),danger:$('danger'),menu:$('menu'),over:$('over'),pause:$('pauseScreen'),pauseBtn:$('pauseBtn'),soundBtn:$('soundBtn'),finalHeight:$('finalHeight'),resultZone:$('resultZone'),resultBest:$('resultBest'),bestBadge:$('bestBadge')};
+const zones=[
+ [0,'地上','🌱'],[10,'家の屋根','🏠'],[50,'ビルの屋上','🏢'],[150,'タワマン','🏙️'],[333,'東京タワー','🗼'],[634,'スカイツリー','📡'],[3776,'富士山','🗻'],[12000,'成層圏','☁️'],[100000,'宇宙','🚀'],[384400000,'月','🌙'],[149600000000,'太陽','☀️'],[300000000000,'銀河の果て','🌌']
+];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const mix=(a,b,t)=>a+(b-a)*t;
+const smooth=t=>{t=clamp(t,0,1);return t*t*(3-2*t)};
+const rgb=(a,b,t)=>'rgb('+Math.round(mix(a[0],b[0],t))+','+Math.round(mix(a[1],b[1],t))+','+Math.round(mix(a[2],b[2],t))+')';
+const fract=n=>n-Math.floor(n);
+const rnd=n=>fract(Math.sin(n*127.1+78.233)*43758.5453);
+const format=n=>n>=100000?Math.floor(n).toLocaleString('ja-JP'):n.toLocaleString('ja-JP',{minimumFractionDigits:1,maximumFractionDigits:1});
+let W=400,H=800,DPR=1,state='menu',pausedFrom='play',last=0,noticeTimer=0,muted=false,audio=null,holdingPointer=null;
+let best=0;
+try{best=Math.max(0,Number(localStorage.getItem('game-lab-ladder-best'))||0)}catch(e){}
+ui.best.textContent=format(best)+'m';
+let g={h:0,theta:.025,omega:0,held:false,push:1,climbTime:0,time:0,zone:0,fallTime:0,fallDir:1,wiggle:0,sideLerp:15,bonus:0};
+function resize(){W=window.innerWidth;H=window.innerHeight;DPR=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);canvas.style.width=W+'px';canvas.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener('resize',resize,{passive:true});resize();
+function sound(freq=440,dur=.09,type='sine',gain=.035){
+ if(muted)return;
+ try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume();const o=audio.createOscillator(),v=audio.createGain(),t=audio.currentTime;o.type=type;o.frequency.setValueAtTime(freq,t);o.frequency.exponentialRampToValueAtTime(Math.max(70,freq*.75),t+dur);v.gain.setValueAtTime(gain,t);v.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(v);v.connect(audio.destination);o.start(t);o.stop(t+dur+.01)}catch(e){}
+}
+function currentZone(h){let index=0;for(let i=1;i<zones.length;i++){if(h>=zones[i][0])index=i;else break}return index}
+function toast(msg){ui.notice.textContent=msg;ui.notice.classList.add('show');noticeTimer=2.1}
+function reset(){
+ g={h:0,theta:.028,omega:0,held:false,push:1,climbTime:0,time:0,zone:0,fallTime:0,fallDir:1,wiggle:0,sideLerp:15,bonus:0};
+ holdingPointer=null;state='play';
+ ui.menu.classList.add('hidden');ui.over.classList.add('hidden');ui.pause.classList.add('hidden');ui.pauseBtn.style.display='inline-block';
+ ui.instruction.textContent='離して登る！ 傾いたら長押し！';ui.instruction.classList.remove('holding');ui.danger.classList.remove('show');ui.notice.classList.remove('show');noticeTimer=0;
+ sound(580,.09,'triangle');
+}
+function release(){if(!g.held)return;g.held=false;holdingPointer=null;g.climbTime=0;ui.instruction.textContent='🪜 ぐんぐん登ろう！ 傾いたら長押し';ui.instruction.classList.remove('holding')}
+function hold(id){
+ if(state!=='play'||g.held)return;
+ g.held=true;holdingPointer=id;g.climbTime=0;
+ // This direction stays locked until the finger is released.
+ g.push=Math.abs(g.theta)>.015?Math.sign(g.theta):Math.abs(g.omega)>.018?Math.sign(g.omega):Math.sign(Math.sin(g.time*.71)+.05);
+ if(!g.push)g.push=1;
+ ui.instruction.textContent=g.push>0?'💪 右側から、左へ押し返す！':'💪 左側から、右へ押し返す！';ui.instruction.classList.add('holding');
+ sound(180,.04,'triangle',.012);
+}
+function fall(){
+ state='fall';g.held=false;holdingPointer=null;g.fallDir=Math.sign(g.theta)||1;g.fallTime=0;
+ ui.pauseBtn.style.display='none';ui.instruction.textContent='💥 ああっ！';ui.instruction.classList.remove('holding');ui.danger.classList.remove('show');sound(155,.35,'sawtooth',.052);
+ if(navigator.vibrate)navigator.vibrate([55,40,95]);
+}
+function finish(){
+ state='over';
+ const isRecord=g.h>best;
+ if(isRecord){best=g.h;try{localStorage.setItem('game-lab-ladder-best',String(best))}catch(e){}}
+ ui.best.textContent=format(best)+'m';ui.finalHeight.textContent=format(g.h);ui.resultZone.textContent=zones[currentZone(g.h)][2]+' '+zones[currentZone(g.h)][1]+'まで登った！';ui.resultBest.textContent='自己ベスト '+format(best)+'m';ui.bestBadge.style.display=isRecord?'inline-block':'none';
+ ui.over.classList.remove('hidden');sound(isRecord?700:300,.14,'sine',.025);
+}
+function togglePause(){
+ if(state==='play'){release();state='pause';ui.pause.classList.remove('hidden');ui.pauseBtn.style.display='none'}
+ else if(state==='pause'){state='play';ui.pause.classList.add('hidden');ui.pauseBtn.style.display='inline-block'}
+}
+function step(dt){
+ if(state==='play'){
+  g.time+=dt;
+  if(g.held)g.climbTime=0;
+  else{
+   g.climbTime+=dt;
+   let base=2.2+Math.min(8,g.climbTime*1.25);
+   let multiplier=1+Math.pow(g.h/220,.78);
+   if(g.h>100000)multiplier*=1+23*Math.pow(g.h/100000,.46);
+   g.h+=base*multiplier*dt;
+  }
+  // Nonlinear inverted-pendulum approximation; the hold force is one-way per press.
+  const difficulty=clamp(Math.log1p(g.h)/Math.log(120000),0,1);
+  const gravity=1.72+2.25*difficulty;
+  const disturbance=(Math.sin(g.time*.91+.4)*.075+Math.sin(g.time*2.17)*.046+Math.sin(g.time*.29+1.1)*.04)*(1+1.2*difficulty);
+  const stepWobble=g.held?0:Math.sin(g.time*14)*(.015+.018*difficulty);
+  const force=g.held?-g.push*(2.35+.50*difficulty):0;
+  const accel=gravity*Math.sin(g.theta)+disturbance+stepWobble+force-1.18*g.omega;
+  g.omega=clamp(g.omega+accel*dt,-2.5,2.5);g.theta+=g.omega*dt;
+  const threshold=mix(.405,.165,smooth(difficulty));
+  const tiltRatio=Math.abs(g.theta)/threshold;
+  if(tiltRatio>=1){g.theta=Math.sign(g.theta)*threshold;fall()}
+  if(g.zone!==currentZone(g.h)){
+   let z=currentZone(g.h);for(let i=g.zone+1;i<=z;i++){if(i>0){toast(zones[i][2]+' '+zones[i][1]+' 突破！');sound(450+i*60,.13,'triangle',.03)}}
+   g.zone=z;
+  }
+  ui.height.textContent=format(g.h);
+  ui.needle.style.left=clamp(50+g.theta/threshold*50,3,97)+'%';
+  ui.tiltText.textContent=tiltRatio>.70?'危険！':g.held?'踏ん張り中':'バランス';
+  ui.tiltText.classList.toggle('bad',tiltRatio>.7);ui.danger.classList.toggle('show',tiltRatio>.77);
+  const targetSide=g.held?g.push*36:15;
+  g.sideLerp+=clamp(targetSide-g.sideLerp,-dt*250,dt*250);
+ }
+ else if(state==='fall'){
+  g.time+=dt;g.fallTime+=dt;
+  g.omega+=g.fallDir*4.2*dt;g.theta=clamp(g.theta+g.omega*dt,-1.7,1.7);
+  if(g.fallTime>1.1)finish();
+ }
+ if(noticeTimer>0){noticeTimer-=dt;if(noticeTimer<=0)ui.notice.classList.remove('show')}
+}
+function roundRect(x,y,w,h,r,color){
+ ctx.fillStyle=color;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill()
+}
+function circle(x,y,r,color){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill()}
+function cloud(x,y,s,alpha){
+ ctx.save();ctx.globalAlpha=alpha;circle(x-36*s,y+7*s,25*s,'#fff');circle(x-7*s,y-7*s,34*s,'#fff');circle(x+29*s,y+6*s,23*s,'#fff');roundRect(x-55*s,y,s*105,s*24,13*s,'#fff');ctx.restore()
+}
+function drawSky(h,t){
+ const x=Math.log10(Math.max(1,h+1));
+ const transitions=[[0,[139,215,239],[240,252,252]],[2.8,[101,181,239],[197,232,249]],[3.7,[79,151,219],[159,199,248]],[4.15,[51,99,168],[113,170,227]],[5,[18,31,76],[55,92,155]],[8,[6,14,40],[22,37,85]],[12,[3,7,29],[13,17,50]]];
+ let k=0;while(k<transitions.length-2&&x>transitions[k+1][0])k++;
+ const a=transitions[k],b=transitions[k+1],u=smooth((x-a[0])/(b[0]-a[0]));
+ const grd=ctx.createLinearGradient(0,0,0,H);grd.addColorStop(0,rgb(a[1],b[1],u));grd.addColorStop(1,rgb(a[2],b[2],u));ctx.fillStyle=grd;ctx.fillRect(0,0,W,H);
+ // Stars gradually appear high above the clouds.
+ if(h>9000){
+  ctx.save();ctx.globalAlpha=clamp((Math.log10(h)-3.95)*.58,0,.97);
+  for(let i=0;i<90;i++){let px=rnd(i*3+8)*W,py=rnd(i*11+2)*H,r=(i%13===0?2:1)*(.6+rnd(i+44)*.8);circle(px,py,r,'#fff')}
+  ctx.restore();
+ }
+ if(h<90000){
+  const sunX=W*.79,sunY=H*.17;
+  circle(sunX,sunY,clamp(W*.12,29,58),h>15000?'#e3effd':'#fff6be');
+  if(h<12000){ctx.save();ctx.globalAlpha=.17;circle(sunX,sunY,clamp(W*.18,43,89),'#ffffd7');ctx.restore()}
+  for(let i=0;i<11;i++){
+   let s=.6+rnd(i+17)*1.3,xx=(rnd(i*3+7)*W*1.8-W*.3+Math.sin(t*.05+i)*15);
+   let yy=(rnd(i*7+3)*H*.85+(h*(.19+rnd(i+2)*.24))%(H+180))-85;
+   cloud(xx,yy,s,h>14000?.35:.72);
+  }
+ }
+ if(h>=100000){
+  // The Earth drops beneath the player; lunar and solar realms follow.
+  const earthY=H*1.35-Math.min(.75,Math.log10(h/100000+1)*.27)*H;
+  circle(W*.46,earthY,Math.max(W,H)*.58,'#3779c2');
+  circle(W*.27,earthY-60,Math.max(W,H)*.22,'#4bc1c3');
+  if(h>7000000)circle(W*.82,H*.19,Math.min(W*.18,73),'#e9e4d9');
+  if(h>300000000){for(let i=0;i<7;i++)circle(W*.82+Math.sin(i*2)*21,H*.19+Math.cos(i*4)*19,3+i%4,'#b3b1af')}
+  if(h>10000000000){circle(W*.2,H*.25,Math.min(W*.22,90),'#ffb73b');circle(W*.2,H*.25,Math.min(W*.19,75),'#ffe27b')}
+ }
+}
+function drawCity(h){
+ if(h>1100)return;
+ const scale=2.35,groundY=H*.86+h*scale;
+ // distant low-rise city
+ for(let i=0;i<18;i++){
+  const bw=39+rnd(i+5)*42,bh=(24+rnd(i*11+7)*95)*scale;
+  const bx=(i/17)*W*1.5-W*.2;
+  const by=groundY-bh;
+  ctx.fillStyle=i%2?'#9dc9d5':'#81bbc9';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle='#d5f2e8';for(let j=0;j<4;j++){for(let k=0;k<Math.floor(bh/29);k++)if(rnd(i*52+j*13+k)>.15)ctx.fillRect(bx+7+j*11,by+11+k*25,5,9)}
+ }
+ // near buildings: deliberately taller farther into play
+ for(let i=0;i<8;i++){
+  const bw=51+rnd(i*27+3)*28,bh=(18+rnd(i*4+19)*195)*scale;
+  const bx=i*W/6.6-36;
+  const by=groundY-bh;
+  ctx.fillStyle=i%2?'#739bb8':'#608dab';ctx.fillRect(bx,by,bw,bh);
+  ctx.fillStyle='#f9e7ae';for(let j=0;j<4;j++){for(let k=0;k<Math.floor(bh/28);k++){if(rnd(i*117+j*11+k*3)>.37)ctx.fillRect(bx+7+j*13,by+10+k*25,7,9)}}
+  ctx.fillStyle='#92bed2';ctx.fillRect(bx-3,by-7,bw+6,7);
+ }
+ if(h<40){
+  ctx.fillStyle='#a1dbaa';ctx.fillRect(0,groundY,W,H-groundY);
+  ctx.fillStyle='#70bb85';ctx.fillRect(0,groundY,W,7);
+  for(let i=0;i<6;i++){const x=i*W/5+10;ctx.fillStyle='#b78270';ctx.fillRect(x,groundY-45,38,45);ctx.fillStyle='#8e658c';ctx.beginPath();ctx.moveTo(x-8,groundY-45);ctx.lineTo(x+19,groundY-72);ctx.lineTo(x+46,groundY-45);ctx.fill();ctx.fillStyle='#fcf2be';ctx.fillRect(x+12,groundY-30,12,15)}
+ }
+}
+function drawTower(h,meters,type){
+ const dist=(h-meters),size=type==='tokyo'?330:430,scale=type==='tokyo'?1.8:1.1;
+ if(dist>meters*.9||dist< -meters*1.1)return;
+ const top=H*.63+dist*scale,bottom=top+size,bx=W*(type==='tokyo'?.70:.24);
+ ctx.save();ctx.globalAlpha=.75;ctx.lineCap='round';
+ const color=type==='tokyo'?'#e36b60':'#83a6bd';
+ ctx.strokeStyle=color;ctx.lineWidth=6;
+ ctx.beginPath();ctx.moveTo(bx,top);ctx.lineTo(bx-58,bottom);ctx.moveTo(bx,top);ctx.lineTo(bx+58,bottom);ctx.stroke();
+ ctx.lineWidth=3;
+ for(let i=0;i<7;i++){let y=top+(i+.8)*size/8,wd=(y-top)/size*56;ctx.beginPath();ctx.moveTo(bx-wd,y);ctx.lineTo(bx+wd,y);ctx.moveTo(bx-wd,y);ctx.lineTo(bx+wd+8,y+23);ctx.moveTo(bx+wd,y);ctx.lineTo(bx-wd-8,y+23);ctx.stroke()}
+ ctx.fillStyle=type==='tokyo'?'#fff0e1':'#c5e1f2';
+ ctx.fillRect(bx-21,top+size*.39,42,8);ctx.fillRect(bx-28,top+size*.65,56,8);
+ ctx.restore();
+}
+function drawFuji(h){
+ if(h<950||h>10000)return;
+ const mx=W*.57,top=H*.62+(h-3776)*.11;
+ ctx.fillStyle='#859ec1';ctx.beginPath();ctx.moveTo(mx,top);ctx.lineTo(-W*.8,top+H*.72);ctx.lineTo(W*1.8,top+H*.72);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#f7fafc';ctx.beginPath();ctx.moveTo(mx,top);ctx.lineTo(mx-W*.15,top+H*.09);ctx.lineTo(mx-W*.07,top+H*.082);ctx.lineTo(mx,top+H*.125);ctx.lineTo(mx+W*.1,top+H*.08);ctx.lineTo(mx+W*.18,top+H*.1);ctx.closePath();ctx.fill();
+}
+function shadowEllipse(x,y,rx,ry,color){ctx.save();ctx.translate(x,y);ctx.scale(rx,ry);circle(0,0,1,color);ctx.restore()}
+function drawLadder(){
+ const fallOffset=state==='fall'?g.fallTime*g.fallTime*H*.75:0;
+ const midX=W*.5+Math.sin(g.time*.45)*2;
+ const py=H*(H<580?.56:.56)+fallOffset;
+ ctx.save();ctx.translate(midX,py);ctx.rotate(g.theta);
+ const lower=g.h<60?Math.min(H+90,H*.28+g.h*6.5):H+120,upper=-H-150;
+ // Rails + rungs travel downward relative to the climber.
+ ctx.strokeStyle='#906944';ctx.lineCap='round';ctx.lineWidth=11;
+ ctx.beginPath();ctx.moveTo(-18,upper);ctx.lineTo(-18,lower);ctx.moveTo(18,upper);ctx.lineTo(18,lower);ctx.stroke();
+ ctx.strokeStyle='#eac489';ctx.lineWidth=7;
+ ctx.beginPath();ctx.moveTo(-18,upper);ctx.lineTo(-18,lower);ctx.moveTo(18,upper);ctx.lineTo(18,lower);ctx.stroke();
+ let phase=(g.h*8)%32;
+ for(let y=upper+phase;y<lower;y+=32){
+  ctx.strokeStyle='#8a603d';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(-18,y);ctx.lineTo(18,y);ctx.stroke();
+  ctx.strokeStyle='#ffe1aa';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-16,y-1);ctx.lineTo(16,y-1);ctx.stroke();
+ }
+ // A visible bottom only at the start; afterwards the ladder continues outside the view.
+ if(g.h<5){roundRect(-27,lower-4,54,10,5,'#ad744a')}
+ drawPerson(g);
+ ctx.restore();
+}
+function drawPerson(p){
+ const leaning=p.held,dir=p.push;
+ let x=p.sideLerp;
+ if(state==='fall')x+=p.fallDir*p.fallTime*150;
+ const bob=leaning?Math.sin(p.time*7)*1.2:Math.sin(p.time*(10+Math.min(6,p.climbTime)))*3;
+ let y=bob-(state==='fall'?p.fallTime*p.fallTime*95:0);
+ ctx.save();ctx.translate(x,y);
+ const bodyRot=leaning?(-dir*.26):Math.sin(p.time*7)*.035;
+ ctx.rotate(bodyRot);
+ // shadow/hair/body/arms using a playful round 2D style
+ ctx.strokeStyle='#294c6a';ctx.lineWidth=5;ctx.lineCap='round';
+ // Legs, alternating during climbing.
+ const kick=leaning?3:Math.sin(p.time*13)*8;
+ ctx.beginPath();ctx.moveTo(-6,21);ctx.lineTo(-12-kick,37);ctx.moveTo(6,21);ctx.lineTo(12+kick,39);ctx.stroke();
+ ctx.strokeStyle='#fff5de';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-12-kick,37);ctx.lineTo(-18-kick,38);ctx.moveTo(12+kick,39);ctx.lineTo(20+kick,39);ctx.stroke();
+ // Rounded shirt, belt and backpack
+ roundRect(-14,-8,28,32,10,'#ffd15d');roundRect(-13,15,26,9,4,'#f5a56b');roundRect(9,1,9,21,4,'#83c5cd');
+ // Arms: holding means pressing both hands into the ladder.
+ ctx.strokeStyle='#f3b082';ctx.lineWidth=7;
+ if(leaning){ctx.beginPath();ctx.moveTo(-dir*9,-1);ctx.lineTo(-dir*23,4);ctx.lineTo(-dir*35,-5);ctx.moveTo(-dir*7,9);ctx.lineTo(-dir*23,18);ctx.lineTo(-dir*34,10);ctx.stroke()}
+ else{let swing=Math.sin(p.time*12)*6;ctx.beginPath();ctx.moveTo(-9,-1);ctx.lineTo(-20,-15+swing);ctx.moveTo(9,1);ctx.lineTo(16,15-swing);ctx.stroke()}
+ // Head and hair cap
+ circle(0,-22,16,'#f6bd91');ctx.fillStyle='#62483f';ctx.beginPath();ctx.arc(0,-28,17,Math.PI,Math.PI*2);ctx.lineTo(15,-24);ctx.lineTo(-12,-24);ctx.closePath();ctx.fill();
+ circle(-5,-21,1.7,'#293b47');circle(6,-21,1.7,'#293b47');
+ ctx.strokeStyle='#a85d58';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(1,-16,4,.1,Math.PI-.1);ctx.stroke();
+ if(Math.abs(p.theta)>.2){circle(14,-26,3,'#9fe4ff')}
+ ctx.restore();
+}
+function drawScene(){
+ ctx.clearRect(0,0,W,H);
+ ctx.save();
+ if(state==='fall')ctx.translate((rnd(Math.floor(g.time*80))*2-1)*8,(rnd(Math.floor(g.time*84))*2-1)*6);
+ drawSky(g.h,g.time);
+ drawCity(g.h);
+ drawTower(g.h,333,'tokyo');drawTower(g.h,634,'skytree');drawFuji(g.h);
+ drawLadder();
+ ctx.restore();
+}
+function frame(ms){
+ const dt=Math.min(.035,Math.max(0,(ms-last)/1000||0));last=ms;
+ step(dt);drawScene();requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+document.addEventListener('pointerdown',e=>{
+ if(state!=='play'||e.target.closest('button')||holdingPointer!==null)return;
+ if(e.cancelable)e.preventDefault();hold(e.pointerId);
+},{passive:false});
+window.addEventListener('pointerup',e=>{if(e.pointerId===holdingPointer)release()},{passive:true});
+window.addEventListener('pointercancel',e=>{if(e.pointerId===holdingPointer)release()},{passive:true});
+window.addEventListener('blur',()=>{if(state==='play')togglePause()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')togglePause()});
+document.addEventListener('contextmenu',e=>e.preventDefault());
+$('startBtn').addEventListener('click',reset);
+$('retryBtn').addEventListener('click',reset);
+$('pauseBtn').addEventListener('click',togglePause);
+$('resumeBtn').addEventListener('click',togglePause);
+$('homeBtn').addEventListener('click',()=>{state='menu';ui.pause.classList.add('hidden');ui.menu.classList.remove('hidden');ui.pauseBtn.style.display='none'});
+$('soundBtn').addEventListener('click',()=>{muted=!muted;ui.soundBtn.textContent=muted?'🔇':'🔊';if(!muted)sound(660,.08)});
+$('shareBtn').addEventListener('click',async()=>{
+ const message='🪜 のぼれ！無限ハシゴ\n'+format(g.h)+'mまで登った！\nあなたはどこまで登れる？\nhttps://sectorlab-jp.github.io/ladder/';
+ if(navigator.share){try{await navigator.share({title:'のぼれ！無限ハシゴ',text:message});return}catch(e){if(e.name==='AbortError')return}}
+ if(navigator.clipboard){try{await navigator.clipboard.writeText(message);$('shareBtn').textContent='✅ コピーしたよ！';setTimeout(()=>$('shareBtn').textContent='🔗 記録をシェアする',1800);return}catch(e){}}
+ location.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(message);
+});
+})();
+</script>
+</body>
+</html>
