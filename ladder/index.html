@@ -283,7 +283,7 @@ function drawCity(h){
 }
 function drawTower(h,meters,type){
  const dist=(h-meters),size=type==='tokyo'?330:430,scale=type==='tokyo'?1.8:1.1;
- if(dist>meters*.9||dist< -meters*1.1)return;
+ if(h < (type==='tokyo'?120:360) || h > (type==='tokyo'?730:1200))return;
  const top=H*.63+dist*scale,bottom=top+size,bx=W*(type==='tokyo'?.70:.24);
  ctx.save();ctx.globalAlpha=.75;ctx.lineCap='round';
  const color=type==='tokyo'?'#e36b60':'#83a6bd';
