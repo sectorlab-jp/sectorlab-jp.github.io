@@ -103,6 +103,23 @@
 #title #start .start-label span{font-size:.82em}#title #start:active{transform:translateY(3px);box-shadow:0 2px 0 #873f64,0 6px 16px #4e243d66}
 #title #memory-tip{bottom:calc(2.8% + env(safe-area-inset-bottom));padding:8px 13px;border:1px solid #fff7fb;background:#fff4fae8;color:#793951;border-radius:30px;font-size:11px;font-weight:800;text-shadow:none;box-shadow:0 2px 10px #3d1b3459}
 @media(max-height:680px){#title .title-brand{top:calc(2.3% + env(safe-area-inset-top))}#title h1{font-size:clamp(29px,8.4vw,43px)}#title .title-brand p{margin-top:6px;padding:5px 13px}#title #start{height:54px;bottom:calc(13% + env(safe-area-inset-bottom))}}
+
+/* Title v9: illustrated original-cover composition and enlarged memory button above Start. */
+#title{background:#f6d5e1}
+#title .title-bg{background:#bd6c91}
+#title .title-bg::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,#fff5f8 0%,#fff5f8 22%,#fff3f8e8 24%,#fff4f866 28%,transparent 32%,transparent 64%,#51334823 76%,#4620376b 92%,#301a2ccc 100%)}
+#title .title-bg::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:none;border:0;box-shadow:inset 0 0 16px #fdbbd66b}
+#title .title-scene{position:absolute;inset:0 auto auto 50%;height:100%;width:auto;max-width:none;transform:translateX(-25%);object-fit:contain;opacity:1;filter:none;-webkit-mask-image:none;mask-image:none}
+#title .title-brand{top:calc(2.5% + env(safe-area-inset-top));left:3%;right:3%;z-index:5}
+#title .title-kicker{font-size:10px;letter-spacing:.22em;color:#ad6680;font-weight:750}
+#title h1{margin:5px 0 4px;color:#a53c66;font-size:clamp(31px,8.7vw,47px);line-height:1.09;letter-spacing:0;font-family:"Hiragino Mincho ProN","Yu Mincho",serif;text-shadow:0 2px 0 #fff9,0 3px 12px #a45d7a77;font-weight:900}
+#title h1 em{color:#ba3a70;letter-spacing:-.055em}
+#title .title-brand p{margin:7px auto 0;background:#fff9fceb;border:1px solid #e1acbe;color:#743650;line-height:1.42;padding:7px 15px;font-size:clamp(12px,3.3vw,14px);border-radius:99px;box-shadow:0 3px 13px #a65c7460;font-weight:750}
+#title #start{left:9%;right:9%;width:82%;bottom:calc(14% + env(safe-area-inset-bottom));height:65px;z-index:6;background:linear-gradient(180deg,#ffbad8,#df6a9d 47%,#bc4478 100%);border:2px solid #fff3fa;outline:1px solid #fae4ef;box-shadow:0 4px 0 #92435e,0 11px 24px #3f13268a,inset 0 3px 6px #fff9}
+#title #start .start-label{font-size:clamp(23px,6.5vw,28px);letter-spacing:.14em}
+#title #memory-tip{position:absolute;z-index:6;left:7%;right:7%;width:86%;transform:none;bottom:calc(23% + env(safe-area-inset-bottom));min-height:53px;white-space:normal;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 13px;font-size:clamp(16px,4.4vw,19px);letter-spacing:.015em;color:#923b62;border:2px solid #fff9fd;border-radius:99px;background:#fff4f9f6;box-shadow:0 5px 0 #a66f8aa8,0 7px 18px #51233f9e;font-weight:800;text-shadow:none}
+@media(max-height:690px){#title .title-brand{top:calc(1.6% + env(safe-area-inset-top))}#title h1{font-size:clamp(29px,8vw,40px)}#title .title-brand p{margin-top:4px;padding:5px 11px}#title #start{bottom:calc(13% + env(safe-area-inset-bottom));height:55px}#title #memory-tip{bottom:calc(24% + env(safe-area-inset-bottom));min-height:45px}}
+
 </style></head>
 <body>
 <main id="app">
