@@ -55,7 +55,7 @@ button{font:inherit;touch-action:manipulation;cursor:pointer}
 #chat{background:#242436;color:#fff}
 #chat .mist{inset:0;isolation:isolate;background:radial-gradient(ellipse at 83% 34%,#635066 0%,transparent 59%),linear-gradient(165deg,#262737 0%,#3a3246 48%,#282537 100%)}
 #chat .mist::before{content:"";position:absolute;inset:-6%;z-index:0;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;filter:blur(30px) brightness(.35) saturate(.55);opacity:.23}
-#chat .portrait{position:absolute;z-index:1;inset:auto;top:5%;left:6%;width:95%;height:81%;transform:none;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;opacity:.57;filter:brightness(.75) saturate(.72) contrast(.94);-webkit-mask-image:radial-gradient(ellipse 77% 78% at 62% 44%,#000 26%,rgba(0,0,0,.90) 52%,rgba(0,0,0,.36) 75%,transparent 99%);mask-image:radial-gradient(ellipse 77% 78% at 62% 44%,#000 26%,rgba(0,0,0,.90) 52%,rgba(0,0,0,.36) 75%,transparent 99%);transition:opacity .22s ease,filter .22s ease}
+#chat .portrait{position:absolute;z-index:1;inset:auto;top:4%;left:20%;width:84%;height:80%;transform:none;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;opacity:.64;filter:brightness(.80) saturate(.78) contrast(1.01);-webkit-mask-image:radial-gradient(ellipse 76% 80% at 70% 44%,#000 27%,rgba(0,0,0,.94) 52%,rgba(0,0,0,.37) 78%,transparent 100%);mask-image:radial-gradient(ellipse 76% 80% at 70% 44%,#000 27%,rgba(0,0,0,.94) 52%,rgba(0,0,0,.37) 78%,transparent 100%);transition:opacity .22s ease,filter .22s ease}
 #chat .mist::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(19,21,35,.25) 0%,rgba(21,21,37,.09) 26%,rgba(18,20,34,.11) 60%,rgba(16,17,29,.47) 100%);pointer-events:none}
 #chat.danger{background:#251f2d}
 #chat.danger .portrait{opacity:.65;filter:brightness(.62) saturate(.40) contrast(1.06)}
@@ -71,9 +71,9 @@ button{font:inherit;touch-action:manipulation;cursor:pointer}
 #chat .header-icons{display:flex;align-items:center;gap:16px;margin-left:auto;color:#f3f0f6;flex-shrink:0}
 #chat .header-icons svg{display:block;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 #chat #timeline{top:calc(env(safe-area-inset-top) + 70px);bottom:calc(246px + env(safe-area-inset-bottom));padding:16px 12px 16px;gap:11px;scrollbar-width:none}
-#chat .line{gap:8px;max-width:calc(100% - 4px);align-items:flex-end}
+#chat .line{gap:8px;max-width:72%;align-items:flex-end}#chat .line.me{max-width:84%}
 #chat .line .face{min-width:34px;width:34px;height:34px;border:1px solid #c2bac8;box-shadow:0 0 2px #ffffff7b;background-position:var(--pose) 18%}
-#chat .bubble{max-width:100%;background:#f9f8fd;color:#24212a;padding:10px 13px;border-radius:17px 17px 17px 5px;font-size:clamp(14px,3.85vw,16px);line-height:1.47;box-shadow:0 2px 5px #0003;overflow-wrap:anywhere}
+#chat .bubble{min-width:0;max-width:100%;background:#f9f8fd;color:#24212a;padding:10px 13px;border-radius:17px 17px 17px 5px;font-size:clamp(14px,3.85vw,16px);line-height:1.47;box-shadow:0 2px 5px #0003;overflow-wrap:anywhere;word-break:normal}
 #chat .me .bubble{background:#bceca4;color:#222922;border-radius:17px 17px 5px 17px}
 #chat #options{left:0;right:0;bottom:calc(61px + env(safe-area-inset-bottom));min-height:0;display:flex;gap:7px;justify-content:flex-end;padding:8px 12px 9px;background:linear-gradient(180deg,transparent,rgba(24,22,38,.20) 75%)}
 #chat .choice{display:flex;width:100%;align-items:center;gap:11px;min-height:52px;padding:8px 11px;border-radius:13px;border:1.2px solid rgba(218,208,230,.73);background:rgba(36,34,51,.72);color:#fff;font-size:clamp(13px,3.65vw,15px);line-height:1.27;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
@@ -107,7 +107,7 @@ const $=id=>document.getElementById(id);
 const pages=[$('title'),$('scare'),$('chat')],flash=$('flash'),dark=$('dark'),timeline=$('timeline'),opts=$('options'),chat=$('chat'),red=$('red');
 let busy=false,epoch=0,miss=0,mood=0,step=0,dead=false;
 const story=[
- {m:['ねぇ♡','今なにしてるの？','私のこと、ちゃんと考えてる？💕'],o:['家でゲームしてるよ！','美咲のこと考えてたよ♡','なんで？ 急にどうしたの？'],c:1,yes:'えへへ♡ うれしい。',no:'……私より大事なこと、あるんだ？'},
+ {m:['ねぇ♡','今なにしてるの？？','私のこと、\nちゃんと考えてる？💕','もしかして、\n他の女の子といる…？','嘘でもいいから\n言ってほしいな…♡'],o:['家でゲームしてるよ！','美咲のこと考えてたよ♡','なんで？ 急にどうしたの？'],c:1,yes:'えへへ♡\nうれしい。',no:'……私より大事なこと、\nあるんだ？'},
  {m:['今日は誰といたの？'],o:['美咲が一番だよ','高校の友達とご飯！','秘密♡'],c:1,yes:'そっか。楽しかった？',no:'……隠し事、してる？'},
  {m:['今から会いに行ってもいい？'],o:['うん、来てほしい！','今日は疲れたからまたね','何時に来るの？'],c:0,yes:'やったぁ♡ すぐ行くね。',no:'……私のこと嫌いなの？'},
  {m:['ねぇ、私のことどれくらい好き？'],o:['世界で一番だよ','好きだよ','それ聞くの何回目？笑'],c:0,yes:'ふふっ。忘れないからね♡',no:'……ちゃんと答えて？'},
