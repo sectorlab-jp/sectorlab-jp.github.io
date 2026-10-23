@@ -1,154 +1,91 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8">
+<html lang="ja">
+<head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#1d1320">
+<meta name="theme-color" content="#191723">
+<meta name="description" content="ドキドキ彼女！ 大好きな彼女とのLINE。返信、まちがえないでね？">
 <title>ドキドキ彼女！</title>
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;background:#170e19;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",Meiryo,sans-serif}
-button{font:inherit;touch-action:manipulation;cursor:pointer}
-#app{position:relative;margin:auto;width:100%;max-width:calc(100dvh * 941/1672);height:100dvh;overflow:hidden;isolation:isolate;background:#261522;color:#fff}
+:root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#18121f}button{font:inherit;touch-action:manipulation;cursor:pointer}button:focus-visible{outline:2px solid #ffa7d6;outline-offset:2px}
+#app{position:relative;width:100%;height:100vh;height:100dvh;margin:0 auto;overflow:hidden;isolation:isolate;background:#1c182b;color:#fff}
+@media(min-width:620px){#app{max-width:480px;box-shadow:0 0 100px #0008}}
 .screen{position:absolute;inset:0;display:none;overflow:hidden}.screen.active{display:block}
-.poster{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:linear-gradient(160deg,#ffcce5,#614256)}
-.poster img{position:absolute;top:0;height:100%;width:auto;max-width:none;left:50%;transform:translateX(-25%);pointer-events:none}
-#scare .poster img{transform:translateX(-75%)}
-.fallback{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;background:radial-gradient(ellipse at top,#ffb8d3,#44283e 65%,#1c1524);pointer-events:none}
-.fallback b{font-size:clamp(26px,7.5vw,42px);text-shadow:0 4px 14px #812650}.fallback p{letter-spacing:.08em}.fallback .icon{font-size:90px}
-#start{position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;z-index:5;display:block}
-#start:focus-visible{outline:4px solid #fff;outline-offset:-8px}
-#start .vis-label{position:absolute;bottom:13%;left:15%;right:15%;height:8%;display:none;place-items:center;background:#ef80ae;border:2px solid #ffd5e7;border-radius:100px;font-size:24px;font-weight:800;box-shadow:0 0 32px #ffd1e9}
-#title.noart .fallback,#title.noart .vis-label{display:grid}
-#scare.noart .fallback{display:flex;background:radial-gradient(ellipse at center,#65151c,#130a11 76%)}
-#flash{position:absolute;inset:0;z-index:30;background:#fff;opacity:0;pointer-events:none}
-#dark{position:absolute;inset:0;z-index:29;background:#000;opacity:0;pointer-events:none}
-#chat{background:#312c38;color:#222;--pose:0%;}
-#chat .mist{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:#38303e}
-#chat .portrait{position:absolute;inset:-2% -10% -1% -5%;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;opacity:.91;transform:translateX(8%) scale(1.035);filter:brightness(.88) saturate(.78);transition:filter .24s,opacity .24s}
-#chat .mist:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,26,39,.48),rgba(27,24,36,.27) 47%,rgba(27,23,39,.52))}
-#chat.danger .portrait{filter:brightness(.74) saturate(.65)}
-#chat.danger .mist:after{background:linear-gradient(180deg,#241b32a6,#34263849 45%,#251622a6)}
-#chat.danger{background:#b6b5b7}
-#chat.danger::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 120px #60091d55;pointer-events:none;z-index:3}
-.hdr{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:13px;background:#f5f5f3ed;padding:calc(env(safe-area-inset-top) + 10px) 15px 12px;box-shadow:0 2px 8px #0002}
-.avatar{border:2px solid #fff;background-color:#c9a2b7;background-image:url("./assets/emotions.webp");background-size:500% 245%;background-position:var(--pose) 20%;background-repeat:no-repeat;width:40px;height:40px;border-radius:50%;flex-shrink:0}
-.nm{font-weight:800;font-size:18px}.online{font-size:11px;color:#92999c;margin-top:2px}
-.back{margin-left:auto;border:0;border-radius:9px;padding:8px 10px;background:#e9e7eb;color:#444}
-#timeline{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top) + 72px);bottom:220px;overflow:auto;padding:18px 14px 25px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;scrollbar-width:none;z-index:4}
-.line{display:flex;gap:8px;align-items:flex-end;max-width:90%}.line.me{align-self:flex-end}
-.face{width:32px;height:32px;border-radius:50%;background-color:#b9829f;background-image:url("./assets/emotions.webp");background-size:500% 245%;background-position:var(--pose) 20%;background-repeat:no-repeat;border:2px solid #fff;flex-shrink:0}
-.bubble{background:#fff;color:#292b2c;padding:11px 13px;border-radius:14px 14px 14px 3px;font-size:16px;line-height:1.5;white-space:pre-wrap;box-shadow:0 2px 4px #0001}
-.me .bubble{background:#b4eb91;border-radius:14px 14px 3px 14px}
-#options{position:absolute;left:0;right:0;bottom:0;min-height:212px;background:#292333e8;padding:12px 14px calc(15px + env(safe-area-inset-bottom));display:flex;flex-direction:column;justify-content:flex-end;gap:9px;z-index:5}
-.choice{border:1px solid #bca8c6;border-radius:12px;padding:13px 15px;background:#403449eb;color:#fff;text-align:left;font-size:14px;line-height:1.35;min-height:46px}
-.choice:active{background:#794d6a}
-#end{position:absolute;inset:0;background:#0b050a;display:none;z-index:7;align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;color:#ffc9de}
-#end h2{font-size:clamp(35px,10vw,58px);margin:0;letter-spacing:.1em;color:#fff}
-#end p{margin:0;line-height:1.7}
-#end button{background:#e891af;color:#281323;border:0;border-radius:99px;padding:13px 34px;font-weight:700}
-#red{position:absolute;inset:0;background:#b50023;z-index:8;opacity:0;pointer-events:none}
-#scare{filter:contrast(1.05)}
-@media(max-height:690px){#timeline{bottom:185px}#options{min-height:185px}.choice{padding:8px 13px;min-height:39px}}
-
-/* iPhone full-bleed / soft blended Misaki background / compact LINE UI v3 */
-#app{width:100%;height:100vh;height:100dvh;max-width:none}
-@media(min-width:620px){#app{max-width:480px;box-shadow:0 0 90px #0008}}
-#chat{background:#242436;color:#fff}
-#chat .mist{inset:0;isolation:isolate;background:radial-gradient(ellipse at 83% 34%,#635066 0%,transparent 59%),linear-gradient(165deg,#262737 0%,#3a3246 48%,#282537 100%)}
-#chat .mist::before{content:"";position:absolute;inset:-6%;z-index:0;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;filter:blur(30px) brightness(.35) saturate(.55);opacity:.23}
-#chat .portrait{position:absolute;z-index:1;inset:auto;top:4%;left:20%;width:84%;height:80%;transform:none;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;opacity:.64;filter:brightness(.80) saturate(.78) contrast(1.01);-webkit-mask-image:radial-gradient(ellipse 76% 80% at 70% 44%,#000 27%,rgba(0,0,0,.94) 52%,rgba(0,0,0,.37) 78%,transparent 100%);mask-image:radial-gradient(ellipse 76% 80% at 70% 44%,#000 27%,rgba(0,0,0,.94) 52%,rgba(0,0,0,.37) 78%,transparent 100%);transition:opacity .22s ease,filter .22s ease}
-#chat .mist::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(19,21,35,.25) 0%,rgba(21,21,37,.09) 26%,rgba(18,20,34,.11) 60%,rgba(16,17,29,.47) 100%);pointer-events:none}
-#chat.danger{background:#251f2d}
-#chat.danger .portrait{opacity:.65;filter:brightness(.62) saturate(.40) contrast(1.06)}
-#chat.danger .mist::after{background:linear-gradient(180deg,#1a17287a,rgba(39,19,37,.18) 38%,rgba(51,16,36,.56) 100%)}
-#chat.danger::after{box-shadow:inset 0 0 75px #520d2540}
-#chat .hdr{min-height:67px;padding:calc(env(safe-area-inset-top) + 10px) 13px 10px;background:rgba(28,29,43,.96);border-bottom:1px solid #ffffff15;box-shadow:none;color:#fff;gap:10px}
-#chat .hdr .avatar{display:none}
-#chat .hdr .nm{font-size:19px;line-height:1.16;font-weight:720}
-#chat .hdr .online{font-size:12px;color:#b9b8c7;margin-top:3px}
-#chat .hdr .back{order:-1;flex-shrink:0;width:32px;height:42px;margin:0 3px 0 0;border:0;padding:0;background:transparent;border-radius:8px;font-size:0}
-#chat .hdr .back::after{content:"‹";display:block;color:#f5eff6;font-size:39px;font-weight:300;line-height:36px}
-#chat .hdr::after{content:none}
-#chat .header-icons{display:flex;align-items:center;gap:16px;margin-left:auto;color:#f3f0f6;flex-shrink:0}
-#chat .header-icons svg{display:block;width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
-#chat #timeline{top:calc(env(safe-area-inset-top) + 70px);bottom:calc(246px + env(safe-area-inset-bottom));padding:16px 12px 16px;gap:11px;scrollbar-width:none}
-#chat .line{gap:8px;max-width:72%;align-items:flex-end}#chat .line.me{max-width:84%}
-#chat .line .face{min-width:34px;width:34px;height:34px;border:1px solid #c2bac8;box-shadow:0 0 2px #ffffff7b;background-position:var(--pose) 18%}
-#chat .bubble{min-width:0;max-width:100%;background:#f9f8fd;color:#24212a;padding:10px 13px;border-radius:17px 17px 17px 5px;font-size:clamp(14px,3.85vw,16px);line-height:1.47;box-shadow:0 2px 5px #0003;overflow-wrap:anywhere;word-break:normal}
-#chat .me .bubble{background:#bceca4;color:#222922;border-radius:17px 17px 5px 17px}
-#chat #options{left:0;right:0;bottom:calc(61px + env(safe-area-inset-bottom));min-height:0;display:flex;gap:7px;justify-content:flex-end;padding:8px 12px 9px;background:linear-gradient(180deg,transparent,rgba(24,22,38,.20) 75%)}
-#chat .choice{display:flex;width:100%;align-items:center;gap:11px;min-height:52px;padding:8px 11px;border-radius:13px;border:1.2px solid rgba(218,208,230,.73);background:rgba(36,34,51,.72);color:#fff;font-size:clamp(13px,3.65vw,15px);line-height:1.27;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
-#chat .choice .num{display:grid;place-items:center;min-width:29px;width:29px;height:29px;background:#dcb7ca;border-radius:50%;font-size:15px;color:#493d4e;font-weight:720}
-#chat .choice .ctext{flex:1}
-#chat .choice:active{background:rgba(104,65,92,.89);transform:scale(.99)}
-#compose{position:absolute;bottom:0;left:0;right:0;z-index:5;min-height:61px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;background:rgba(21,23,36,.92);color:#d9d6e3;border-top:1px solid #ffffff0c}
-#compose svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-#compose .small{font-size:18px;line-height:1;color:#dddbe5;flex-shrink:0}
-#compose .circle{min-width:32px;width:32px;height:32px;border:1.5px solid #9395a9;border-radius:50%;display:grid;place-items:center}
-#compose .fakeinput{flex:1;min-width:0;height:37px;padding:0 13px;background:#3b3a50;border-radius:40px;display:flex;align-items:center;color:#a8a4bb;font-size:13px;white-space:nowrap;overflow:hidden}
-#compose .send{color:#eda6ca}
-@media(max-width:340px){#chat .header-icons{gap:10px}#chat .hdr{gap:7px;padding-left:8px;padding-right:8px}#chat .choice{min-height:47px}#chat #timeline{bottom:calc(228px + env(safe-area-inset-bottom))}}
-@media(max-height:690px){#chat #timeline{bottom:calc(216px + env(safe-area-inset-bottom))}#chat #options{bottom:calc(54px + env(safe-area-inset-bottom));gap:5px;padding:6px 10px}#chat .choice{min-height:43px;padding:6px 10px}#compose{min-height:54px;padding-top:5px;padding-bottom:calc(5px + env(safe-area-inset-bottom))}#chat .portrait{height:79%}}
-
-</style></head><body>
+.poster{position:absolute;inset:0;pointer-events:none;background:#402b3d;overflow:hidden}
+.poster img{position:absolute;top:0;left:50%;height:100%;width:auto;max-width:none;transform:translateX(-25%);pointer-events:none}
+#scare .poster img{transform:translateX(-75%)}#start{position:absolute;z-index:4;inset:0;display:block;width:100%;height:100%;border:0;background:transparent}
+#start .fallback-title{display:none}#title.noart .fallback-title{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;height:100%;font-size:27px;text-shadow:0 2px 14px #5d1a42;background:radial-gradient(ellipse at center,#f3a3bb,#472b48)}#title.noart .fallback-title b{font-size:20px}#scare.noart .poster:after{content:'🔪';font-size:160px;display:grid;place-items:center;height:100%;background:#311721}
+#white,#black{position:absolute;inset:0;z-index:50;opacity:0;pointer-events:none}#white{background:#fff}#black{background:#04030a;z-index:49}
+#chat{color:#fff;background:#282434;--mood-tint:#b894bb}
+#chat .mist{position:absolute;inset:0;overflow:hidden;pointer-events:none;isolation:isolate;background:radial-gradient(ellipse at 75% 34%,#584458 0%,transparent 60%),linear-gradient(135deg,#29293e,#302a3d 50%,#1f1d2d)}
+#chat .mist::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 90% 30%,rgba(234,152,186,.10),transparent 57%),linear-gradient(180deg,#29243580,#1a1b30b8)}
+#portrait{position:absolute;z-index:1;top:6.5%;right:-22%;width:min(78vw,342px);height:auto;max-height:79%;object-fit:contain;object-position:top right;opacity:.91;filter:saturate(.91) brightness(.93);-webkit-mask-image:radial-gradient(ellipse 82% 80% at 55% 43%,#000 0%,#000 48%,#000a 71%,transparent 97%);mask-image:radial-gradient(ellipse 82% 80% at 55% 43%,#000 0%,#000 48%,#000a 71%,transparent 97%);transition:opacity .22s ease,filter .22s ease;user-select:none}
+#chat .mist::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(23,23,39,.55),rgba(23,23,39,.32) 41%,rgba(22,22,38,.03) 82%),linear-gradient(180deg,rgba(23,24,40,.16),transparent 39%,rgba(19,19,33,.42) 100%)}
+#chat.danger .mist{background:radial-gradient(ellipse at 80% 35%,#65404d 0%,transparent 61%),linear-gradient(135deg,#231e31,#362a35)}
+#chat.danger #portrait{opacity:.97;filter:saturate(.72) brightness(.87)}#chat.danger .mist::after{background:linear-gradient(90deg,#1d182da1,#221d3536 80%),linear-gradient(180deg,#241c3347,transparent 39%,#3f1a2d77 100%)}
+#chat #header{position:absolute;z-index:6;left:0;right:0;top:0;min-height:70px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;display:flex;align-items:center;gap:12px;background:rgba(27,28,42,.97);border-bottom:1px solid #ffffff0e}
+#back{background:none;border:0;color:#fff;width:28px;height:40px;display:grid;place-items:center;padding:0}
+#back svg{width:26px;height:27px}#who{min-width:0}#who strong{display:block;font-size:20px;line-height:1.2;font-weight:730}#who small{display:block;color:#c0c0d0;font-size:12px;margin-top:3px}
+#header .tools{display:flex;align-items:center;gap:17px;margin-left:auto;flex-shrink:0;color:#f4f2f6}#header svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.tools svg{width:20px;height:20px}
+#timeline{position:absolute;z-index:5;top:calc(75px + env(safe-area-inset-top));bottom:calc(242px + env(safe-area-inset-bottom));left:0;right:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:18px 11px 24px;overflow-x:hidden;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
+#timeline::-webkit-scrollbar{display:none}
+.msg{max-width:61%;display:flex;align-items:flex-end;gap:8px;flex-shrink:0}.msg.me{align-self:flex-end;max-width:83%}
+.face{width:35px;height:35px;min-width:35px;border:1px solid #b9afbe;border-radius:50%;overflow:hidden;background:#655165;box-shadow:0 0 2px #eee8;flex-shrink:0}
+.face img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
+.bubble{min-width:0;max-width:100%;border-radius:16px 16px 16px 5px;padding:11px 13px;background:#faf9fd;color:#252330;font-size:clamp(14px,3.75vw,16px);font-weight:480;line-height:1.48;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 2px 7px #0002}
+.msg.me .bubble{background:#c5eeaf;color:#243021;border-radius:16px 16px 5px 16px}
+#choices{position:absolute;z-index:6;left:0;right:0;bottom:calc(65px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:9px;padding:8px 12px 12px;background:linear-gradient(180deg,transparent,#1e1b30a8 95%)}
+.choice{display:flex;align-items:center;gap:12px;border:1.4px solid rgba(218,205,225,.77);background:rgba(36,34,52,.83);color:#fff;border-radius:15px;min-height:56px;width:100%;padding:9px 12px;text-align:left;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:inset 0 0 0 1px #ffffff0d;font-size:clamp(13px,3.7vw,15px)}.choice:active{background:#754c6b;transform:scale(.995)}
+.choice .num{height:31px;width:31px;min-width:31px;display:grid;place-items:center;border-radius:50%;background:#d7b6c9;color:#3f3848;font-size:15px;font-weight:750}.choice .ctext{flex:1;line-height:1.35}
+#compose{position:absolute;z-index:6;left:0;right:0;bottom:0;height:calc(65px + env(safe-area-inset-bottom));padding:9px 11px calc(9px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:11px;background:rgba(19,21,35,.94);border-top:1px solid #ffffff0d}
+#compose svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+#compose .round{border:1.6px solid #9b9bac;width:33px;height:33px;min-width:33px;border-radius:50%;display:grid;place-items:center}
+#compose .fake{flex:1;min-width:0;display:flex;align-items:center;height:38px;padding:0 13px;background:#3e3d53;color:#b9b6c8;border-radius:24px;white-space:nowrap;overflow:hidden;font-size:13px}
+#compose .icon{color:#dbd8e7}#compose .send{color:#e9a2c3}
+#end{position:absolute;z-index:30;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:24px;background:#0b060e;color:#fff;text-align:center}#end h2{font-size:clamp(39px,11vw,57px);margin:0;letter-spacing:.12em}#end p{margin:0;color:#f0c0d4;line-height:2}#end button{border:0;border-radius:50px;background:#eba0bb;color:#281925;padding:14px 36px;font-weight:750}
+#red{position:absolute;inset:0;z-index:40;background:#b40025;opacity:0;pointer-events:none}
+@media(max-height:715px){#timeline{bottom:calc(208px + env(safe-area-inset-bottom))}#choices{bottom:calc(57px + env(safe-area-inset-bottom));gap:6px;padding:6px 10px}#compose{height:calc(57px + env(safe-area-inset-bottom))} .choice{min-height:43px;padding:7px 10px}#portrait{top:5.5%;height:77%}}
+@media(max-width:350px){.msg{max-width:66%}#header .tools{gap:11px}#timeline{padding-left:9px;padding-right:9px}.choice{min-height:48px}}
+</style></head>
+<body>
 <main id="app">
-<section id="title" class="screen active"><div class="poster"><img class="art" alt="" src="./assets/sprite.webp"></div><div class="fallback"><div class="icon">🌸</div><b>ドキドキ彼女！</b><p>大好きな彼女とのLINE</p></div><button id="start" aria-label="はじめる"><span class="vis-label">はじめる ♡</span></button></section>
-<section id="scare" class="screen"><div class="poster"><img class="art" alt="" src="./assets/sprite.webp"></div><div class="fallback"><div class="icon">🔪</div><b>ずっと一緒だよ？</b></div></section>
-<section id="chat" class="screen"><div class="mist"><div class="portrait" id="portrait" role="img" aria-label="美咲の表情：通常"></div></div>
-<div class="hdr"><div class="avatar" aria-hidden="true"></div><div><div class="nm">美咲 ♡</div><div class="online">オンライン</div></div><button class="back" id="home" aria-label="タイトルへ戻る">戻る</button><div class="header-icons" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.7" cy="10.7" r="6.5"/><path d="m16 16 5 5"/></svg><svg viewBox="0 0 24 24"><path d="M5 3.8c.8-.7 2-.6 2.7.2l2.1 2.4c.6.7.6 1.7 0 2.4l-1.2 1.5a15 15 0 0 0 5.2 5.2l1.5-1.2c.7-.6 1.7-.6 2.4 0l2.4 2.1c.8.7.9 1.9.2 2.7l-1.8 2.1c-.8.9-2 1.2-3.2.9A22 22 0 0 1 3.1 7c-.3-1.2 0-2.4.9-3.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div></div>
-<div id="timeline" aria-live="polite"></div><div id="options"></div>
-<div id="compose" aria-hidden="true"><span class="small circle"><svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg></span><span class="small"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1"/><path d="m21 17-5-5-7 7"/></svg></span><div class="fakeinput">メッセージを入力…</div><span class="small"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M9 9h.01M15 9h.01"/></svg></span><span class="send"><svg viewBox="0 0 24 24"><path d="m4 4 16 8-16 8 3-8-3-8zM7 12h13"/></svg></span></div>
-<div id="end"><h2>GAME OVER</h2><p>ねぇ、約束したよね？<br>ずっと一緒だって♡</p><button id="restart">もう一度</button></div><div id="red"></div>
-</section>
-<div id="dark"></div><div id="flash"></div>
+<section class="screen active" id="title"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div><button id="start" aria-label="はじめる"><span class="fallback-title">ドキドキ彼女！<br><b>大好きな彼女とのLINE</b><br>はじめる ♡</span></button></section>
+<section class="screen" id="scare"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div></section>
+<section class="screen" id="chat"><div class="mist"><img id="portrait" src="./assets/misaki-normal.webp" alt="美咲の表情：通常"></div>
+<header id="header"><button id="back" aria-label="タイトルに戻る"><svg viewBox="0 0 24 24"><path d="m15 4-8 8 8 8"/></svg></button><div id="who"><strong>美咲 ♡</strong><small>オンライン</small></div><div class="tools" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="m15.3 15.3 5 5"/></svg><svg viewBox="0 0 24 24"><path d="M5 4.5c1-.7 2-.5 2.6.2l2.1 2.2c.6.7.6 1.6 0 2.3l-1.2 1.4c1.4 2.3 3.2 4.1 5.5 5.5l1.4-1.2c.7-.6 1.6-.6 2.3 0l2.2 2.1c.7.6.9 1.6.2 2.6l-1.5 1.6c-.8.8-1.8 1.2-3.1.8C10.7 21 3 13.3 2 8.1c-.3-1.2.1-2.3.8-3.1Z"/></svg><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div></header>
+<div id="timeline" aria-live="polite"></div><div id="choices"></div>
+<div id="compose" aria-hidden="true"><span class="round icon"><svg viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></svg></span><span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1"/><path d="m21 18-6-6-7 7"/></svg></span><span class="fake">メッセージを入力…</span><span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14c2 3 6 3 8 0M9 9h.01M15 9h.01"/></svg></span><span class="send"><svg viewBox="0 0 24 24"><path d="m3 4 18 8L3 20l3-8-3-8zM6 12h15"/></svg></span></div>
+<div id="end"><h2>GAME OVER</h2><p>ねぇ、約束したよね？<br>ずっと一緒だって♡</p><button id="restart">もう一度</button></div><div id="red"></div></section>
+<div id="black"></div><div id="white"></div>
 </main>
 <script>
 'use strict';
-const $=id=>document.getElementById(id);
-const pages=[$('title'),$('scare'),$('chat')],flash=$('flash'),dark=$('dark'),timeline=$('timeline'),opts=$('options'),chat=$('chat'),red=$('red');
+const el=id=>document.getElementById(id);
+const title=el('title'),scare=el('scare'),chat=el('chat'),white=el('white'),black=el('black'),red=el('red'),timeline=el('timeline'),choices=el('choices'),portrait=el('portrait');
+const scenes=[title,scare,chat];
+const faceImages={0:'normal',1:'plus1',2:'plus2',[-1]:'minus1',[-2]:'minus2'};
+const moods={0:'通常',1:'＋1',2:'＋2',[-1]:'－1',[-2]:'－2'};
+for(const name of Object.values(faceImages)){const img=new Image();img.src=`./assets/misaki-${name}.webp`}
 let busy=false,epoch=0,miss=0,mood=0,step=0,dead=false;
 const story=[
- {m:['ねぇ♡','今なにしてるの？？','私のこと、\nちゃんと考えてる？💕','もしかして、\n他の女の子といる…？','嘘でもいいから\n言ってほしいな…♡'],o:['家でゲームしてるよ！','美咲のこと考えてたよ♡','なんで？ 急にどうしたの？'],c:1,yes:'えへへ♡\nうれしい。',no:'……私より大事なこと、\nあるんだ？'},
- {m:['今日は誰といたの？'],o:['美咲が一番だよ','高校の友達とご飯！','秘密♡'],c:1,yes:'そっか。楽しかった？',no:'……隠し事、してる？'},
- {m:['今から会いに行ってもいい？'],o:['うん、来てほしい！','今日は疲れたからまたね','何時に来るの？'],c:0,yes:'やったぁ♡ すぐ行くね。',no:'……私のこと嫌いなの？'},
- {m:['ねぇ、私のことどれくらい好き？'],o:['世界で一番だよ','好きだよ','それ聞くの何回目？笑'],c:0,yes:'ふふっ。忘れないからね♡',no:'……ちゃんと答えて？'},
- {m:['最後にひとつだけ。','これからも、ずっと一緒だよね？'],o:['もちろん！','できるだけね','重いって笑'],c:0,yes:'……うん。約束だよ♡',no:'……約束してくれないの？'}
+ {m:['ねぇ♡','今なにしてるの？','私のこと…\nちゃんと考えてる？♡','もしかして、\nほかの子といる…？','嘘でもいいから\n言ってほしいな…♡'],o:['家でゲームしてるよ！','美咲のこと考えてたよ♡','なんで？ 急にどうしたの？'],c:1,yes:'えへへ♡\nうれしい。',no:'……ゲームの方が\n大事なんだ？'},
+ {m:['今日は誰といたの？'],o:['美咲が一番だよ','高校の友達とご飯！','秘密♡'],c:1,yes:'そっか♡\n楽しかった？',no:'……隠し事、\nしてる？'},
+ {m:['今から会いに行ってもいい？'],o:['うん、来てほしい！','今日は疲れたからまたね','何時に来るの？'],c:0,yes:'やったぁ♡\nすぐ行くね。',no:'……私のこと、\n嫌いなの？'},
+ {m:['私のこと、\nどれくらい好き？'],o:['世界で一番だよ','好きだよ','それ聞くの何回目？笑'],c:0,yes:'ふふっ。\n忘れないからね♡',no:'……ちゃんと\n答えて？'},
+ {m:['最後にひとつだけ。','これからも、\nずっと一緒だよね？'],o:['もちろん！','できるだけね','重いって笑'],c:0,yes:'……うん。\n約束だよ♡',no:'……約束して\nくれないの？'}
 ];
-function sleep(n,t){return new Promise(resolve=>{setTimeout(()=>resolve(n===epoch),t)})}
-function page(el){for(const p of pages)p.classList.remove('active');el.classList.add('active')}
-function reset(){epoch++;busy=false;miss=0;mood=0;step=0;dead=false;timeline.innerHTML='';opts.innerHTML='';chat.classList.remove('danger');setMood();$('end').style.display='none';flash.style.opacity='0';dark.style.opacity='0';red.style.opacity='0';page($('title'))}
-function line(text,mine=false){const wrap=document.createElement('div');wrap.className='line'+(mine?' me':'');if(!mine){const av=document.createElement('span');av.className='face';av.setAttribute('aria-hidden','true');wrap.appendChild(av)}const b=document.createElement('div');b.className='bubble';b.textContent=text;wrap.appendChild(b);timeline.appendChild(wrap);timeline.scrollTop=timeline.scrollHeight}
-async function intro(){if(busy)return;busy=true;let n=++epoch;
- flash.style.opacity='1';
- if(!await sleep(n,85))return;page($('scare'));flash.style.opacity='0';
- if(!await sleep(n,145))return;dark.style.opacity='1';
- if(!await sleep(n,1050))return;page(chat);setMood();drawScene(n);
- if(!await sleep(n,130))return;dark.style.opacity='0';busy=false}
-function setMood(){
- const positions={'0':'0%','1':'25%','2':'50%','-1':'75%','-2':'100%'};
- const labels={'0':'通常','1':'＋1','2':'＋2','-1':'－1','-2':'－2'};
- chat.style.setProperty('--pose',positions[String(mood)]??'0%');
- chat.dataset.mood=String(mood);
- $('portrait').setAttribute('aria-label','美咲の表情：'+labels[String(mood)]);
- chat.classList.toggle('danger',mood<0);
-}
-async function drawScene(n){if(step>=story.length){opts.innerHTML='';line('大好き。これからも、ずっと。♡');return}
- const s=story[step];opts.innerHTML='';
- for(const m of s.m){if(!await sleep(n,430))return;line(m)}
- if(n!==epoch||dead)return;
- s.o.forEach((txt,i)=>{const b=document.createElement('button');b.className='choice';const num=document.createElement('span');num.className='num';num.textContent=String(i+1);const caption=document.createElement('span');caption.className='ctext';caption.textContent=txt;b.append(num,caption);b.onclick=()=>answer(i);opts.appendChild(b)})}
-async function answer(i){if(busy||dead||step>=story.length)return;busy=true;const n=epoch;const s=story[step];opts.innerHTML='';line(s.o[i],true);
- const correct=i===s.c;
- if(!correct){miss++;mood=miss>=2?-2:-1;}else{mood=Math.min(2,mood+1)}
- setMood();if(!await sleep(n,500))return;
- if(miss>=2){await lose(n);return}
- line(correct?s.yes:s.no);step++;if(!await sleep(n,500))return;busy=false;drawScene(n)}
-async function lose(n){dead=true;chat.classList.add('danger');line('……');if(!await sleep(n,700))return;
- for(let i=0;i<16;i++){line('、');if(!await sleep(n,140))return}
- if(!await sleep(n,500))return;line('さよなら。');
- if(!await sleep(n,900))return;flash.style.opacity='1';page($('scare'));
- if(!await sleep(n,90))return;flash.style.opacity='0';red.style.opacity='.65';
- if(!await sleep(n,180))return;red.style.opacity='0';dark.style.opacity='1';
- if(!await sleep(n,1050))return;page(chat);$('end').style.display='flex';dark.style.opacity='0'}
-document.querySelectorAll('img.art').forEach(im=>{im.onerror=()=>{im.closest('.screen').classList.add('noart')}})
-$('start').addEventListener('click',intro);$('home').addEventListener('click',reset);$('restart').addEventListener('click',reset);
+function sleep(id,ms){return new Promise(resolve=>setTimeout(()=>resolve(id===epoch),ms))}
+function show(screen){scenes.forEach(p=>p.classList.remove('active'));screen.classList.add('active')}
+function faceFile(level=mood){return `./assets/misaki-${faceImages[level]}.webp`}
+function setMood(){portrait.src=faceFile();portrait.alt='美咲の表情：'+moods[mood];chat.dataset.mood=String(mood);chat.classList.toggle('danger',mood<0);document.querySelectorAll('.face img').forEach(img=>{img.src=faceFile()})}
+function reset(){epoch++;busy=false;miss=0;mood=0;step=0;dead=false;timeline.replaceChildren();choices.replaceChildren();white.style.opacity='0';black.style.opacity='0';red.style.opacity='0';el('end').style.display='none';setMood();show(title)}
+function addMessage(value,mine=false){const row=document.createElement('div');row.className='msg'+(mine?' me':'');if(!mine){const frame=document.createElement('span');frame.className='face';const img=document.createElement('img');img.src=faceFile();img.alt='';frame.append(img);row.append(frame)}const b=document.createElement('div');b.className='bubble';b.textContent=value;row.append(b);timeline.append(row);timeline.scrollTop=timeline.scrollHeight}
+async function intro(){if(busy)return;busy=true;const n=++epoch;white.style.opacity='1';if(!await sleep(n,85))return;show(scare);white.style.opacity='0';if(!await sleep(n,145))return;black.style.opacity='1';if(!await sleep(n,1050))return;show(chat);setMood();drawScene(n);if(!await sleep(n,130))return;black.style.opacity='0';busy=false}
+async function drawScene(n){if(n!==epoch||dead)return;if(step>=story.length){choices.replaceChildren();addMessage('大好き。\nこれからも、ずっと。♡');return}const s=story[step];choices.replaceChildren();for(const m of s.m){if(!await sleep(n,370))return;addMessage(m)}if(n!==epoch||dead)return;s.o.forEach((txt,i)=>{const button=document.createElement('button');button.className='choice';const number=document.createElement('span');number.className='num';number.textContent=String(i+1);const caption=document.createElement('span');caption.className='ctext';caption.textContent=txt;button.append(number,caption);button.addEventListener('click',()=>answer(i));choices.append(button)})}
+async function answer(i){if(busy||dead||step>=story.length)return;busy=true;const n=epoch,s=story[step];choices.replaceChildren();addMessage(s.o[i],true);if(i!==s.c){miss++;mood=miss>=2?-2:-1}else{mood=Math.min(2,mood+1)}setMood();if(!await sleep(n,450))return;if(miss>=2){await lose(n);return}addMessage(i===s.c?s.yes:s.no);step++;if(!await sleep(n,450))return;busy=false;drawScene(n)}
+async function lose(n){dead=true;addMessage('……');if(!await sleep(n,630))return;for(let i=0;i<16;i++){addMessage('、');if(!await sleep(n,135))return}if(!await sleep(n,400))return;addMessage('さよなら。');if(!await sleep(n,790))return;white.style.opacity='1';show(scare);if(!await sleep(n,80))return;white.style.opacity='0';red.style.opacity='.65';if(!await sleep(n,155))return;red.style.opacity='0';black.style.opacity='1';if(!await sleep(n,1150))return;show(chat);el('end').style.display='flex';black.style.opacity='0'}
+el('start').addEventListener('click',intro);el('back').addEventListener('click',reset);el('restart').addEventListener('click',reset);
+document.querySelectorAll('.art').forEach(img=>{img.addEventListener('error',()=>img.closest('.screen').classList.add('noart'))});
+setMood();
 </script></body></html>
