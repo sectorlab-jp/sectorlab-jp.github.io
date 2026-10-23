@@ -48,6 +48,41 @@ button{font:inherit;touch-action:manipulation;cursor:pointer}
 #red{position:absolute;inset:0;background:#b50023;z-index:8;opacity:0;pointer-events:none}
 #scare{filter:contrast(1.05)}
 @media(max-height:690px){#timeline{bottom:185px}#options{min-height:185px}.choice{padding:8px 13px;min-height:39px}}
+
+/* LINE風モックに寄せた実ゲームUI v2 */
+#chat{background:#292733;color:#fff}
+#chat .mist{background:radial-gradient(ellipse at 90% 38%,#6a445d 0%,transparent 60%),linear-gradient(120deg,#242538,#323047 55%,#4b344a)}
+#chat .mist:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 80% 48%,transparent 16%,rgba(16,15,27,.2) 74%);z-index:1;pointer-events:none}
+#chat .portrait{inset:auto;top:-1%;left:18%;width:100%;height:83%;transform:none;background-size:500% 100%;background-position:var(--pose) 50%;opacity:.9;filter:brightness(.66) saturate(.64) contrast(1.08);transition:filter .2s,opacity .2s}
+#chat .mist:after{z-index:2;background:linear-gradient(180deg,rgba(20,21,34,.24),rgba(23,23,38,.32) 44%,rgba(26,23,40,.51) 82%,rgba(16,18,30,.75));pointer-events:none}
+#chat.danger{background:#25212e}
+#chat.danger .portrait{filter:brightness(.74) saturate(.52) contrast(1.15);opacity:.95}
+#chat.danger .mist:after{background:linear-gradient(180deg,rgba(14,15,31,.32),rgba(29,21,36,.35) 50%,rgba(55,15,32,.66) 96%)}
+#chat.danger::after{box-shadow:inset 0 0 100px #4a071c4a;z-index:3}
+#chat .hdr{background:rgba(28,29,43,.96);border-bottom:1px solid #ffffff15;color:#fff;box-shadow:none;gap:13px;padding:calc(env(safe-area-inset-top) + 9px) 17px 12px;min-height:72px}
+#chat .hdr .avatar{display:none}
+#chat .hdr .nm{font-size:20px;line-height:1.2;font-weight:750;letter-spacing:.01em}
+#chat .hdr .online{color:#b9bac8;font-size:12px;margin-top:2px}
+#chat .hdr .back{order:-1;margin-left:0;margin-right:1px;background:transparent;border:0;border-radius:8px;width:29px;height:42px;padding:0;font-size:0;flex-shrink:0}
+#chat .hdr .back:after{content:"‹";color:#fff;font-size:39px;font-weight:300;line-height:37px}
+#chat .hdr:after{content:"⌕  ☎  ☰";margin-left:auto;font-size:21px;white-space:pre;letter-spacing:.04em;color:#f4f0f8}
+#chat #timeline{top:calc(env(safe-area-inset-top) + 75px);bottom:calc(284px + env(safe-area-inset-bottom));padding:20px 12px 18px 12px;gap:12px;scrollbar-width:none}
+#chat .line{max-width:92%;gap:8px;align-items:flex-end}
+#chat .line .face{height:36px;width:36px;min-width:36px;border-color:#bfb4c5;box-shadow:0 0 1px #fff9}
+#chat .bubble{background:#faf9fd;color:#22212b;font-size:16px;padding:12px 15px;border-radius:18px 18px 18px 6px;line-height:1.5;box-shadow:0 2px 7px #0002}
+#chat .me .bubble{background:#c0eca7;color:#20261f;border-radius:18px 18px 6px 18px}
+#chat #options{min-height:0;bottom:calc(76px + env(safe-area-inset-bottom));padding:8px 13px 10px;background:linear-gradient(180deg,transparent,rgba(31,29,43,.18));gap:8px;justify-content:flex-end}
+#chat .choice{display:flex;align-items:center;gap:13px;width:100%;min-height:56px;padding:9px 12px;text-align:left;background:rgba(36,35,52,.76);border:1.5px solid rgba(205,195,225,.78);border-radius:15px;color:#fff;font-size:15px;line-height:1.3;box-shadow:inset 0 0 0 1px #ffffff10;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+#chat .choice:active{background:rgba(89,62,93,.95);transform:scale(.993)}
+#chat .choice .num{height:30px;width:30px;min-width:30px;display:grid;place-items:center;border-radius:50%;background:#ddb7ca;color:#464252;font-size:15px;font-weight:700}
+#chat .choice .ctext{flex:1}
+#compose{position:absolute;z-index:5;bottom:0;left:0;right:0;min-height:76px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:11px;background:rgba(21,23,36,.88);color:#f4d3e2}
+#compose .small{font-size:25px;color:#dbdbe3;line-height:1}
+#compose .circle{border:1.5px solid #a6a5b4;height:34px;width:34px;min-width:34px;border-radius:50%;display:grid;place-items:center}
+#compose .fakeinput{flex:1;min-width:0;background:#3a3b50;color:#9e9bad;font-size:13px;border-radius:99px;height:37px;display:flex;align-items:center;padding:0 14px;white-space:nowrap}
+#compose .send{font-size:26px;color:#e9a2c3}
+@media(max-height:700px){#chat #timeline{bottom:calc(258px + env(safe-area-inset-bottom))}#chat .choice{min-height:49px}#chat #options{gap:7px;padding:6px 12px 7px}#compose{min-height:66px}#chat #options{bottom:calc(67px + env(safe-area-inset-bottom))}}
+
 </style></head><body>
 <main id="app">
 <section id="title" class="screen active"><div class="poster"><img class="art" alt="" src="./assets/sprite.webp"></div><div class="fallback"><div class="icon">🌸</div><b>ドキドキ彼女！</b><p>大好きな彼女とのLINE</p></div><button id="start" aria-label="はじめる"><span class="vis-label">はじめる ♡</span></button></section>
@@ -55,6 +90,7 @@ button{font:inherit;touch-action:manipulation;cursor:pointer}
 <section id="chat" class="screen"><div class="mist"><div class="portrait" id="portrait" role="img" aria-label="美咲の表情：通常"></div></div>
 <div class="hdr"><div class="avatar" aria-hidden="true"></div><div><div class="nm">美咲 ♡</div><div class="online">オンライン</div></div><button class="back" id="home">戻る</button></div>
 <div id="timeline" aria-live="polite"></div><div id="options"></div>
+<div id="compose" aria-hidden="true"><span class="small circle">＋</span><span class="small">▧</span><div class="fakeinput">メッセージを入力…</div><span class="small">☺</span><span class="send">➤</span></div>
 <div id="end"><h2>GAME OVER</h2><p>ねぇ、約束したよね？<br>ずっと一緒だって♡</p><button id="restart">もう一度</button></div><div id="red"></div>
 </section>
 <div id="dark"></div><div id="flash"></div>
@@ -93,10 +129,10 @@ async function drawScene(n){if(step>=story.length){opts.innerHTML='';line('大�
  const s=story[step];opts.innerHTML='';
  for(const m of s.m){if(!await sleep(n,430))return;line(m)}
  if(n!==epoch||dead)return;
- s.o.forEach((txt,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=(i+1)+'. '+txt;b.onclick=()=>answer(i);opts.appendChild(b)})}
+ s.o.forEach((txt,i)=>{const b=document.createElement('button');b.className='choice';const num=document.createElement('span');num.className='num';num.textContent=String(i+1);const caption=document.createElement('span');caption.className='ctext';caption.textContent=txt;b.append(num,caption);b.onclick=()=>answer(i);opts.appendChild(b)})}
 async function answer(i){if(busy||dead||step>=story.length)return;busy=true;const n=epoch;const s=story[step];opts.innerHTML='';line(s.o[i],true);
  const correct=i===s.c;
- if(!correct){miss++;mood=miss===1?-1:-2;}else{mood=miss? -1 : Math.min(2,mood+1)}
+ if(!correct){miss++;mood=miss>=2?-2:-1;}else{mood=Math.min(2,mood+1)}
  setMood();if(!await sleep(n,500))return;
  if(miss>=2){await lose(n);return}
  line(correct?s.yes:s.no);step++;if(!await sleep(n,500))return;busy=false;drawScene(n)}
