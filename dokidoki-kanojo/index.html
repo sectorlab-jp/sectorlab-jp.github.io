@@ -82,13 +82,34 @@
 .warning-sd-zone{position:relative;display:flex;align-items:center;justify-content:center;min-height:clamp(130px,24vh,208px);max-height:24vh;margin-top:2px;overflow:hidden}.warning-sd-zone img{height:clamp(150px,26vh,218px);width:auto;max-width:70%;object-fit:contain;object-position:center;filter:drop-shadow(0 4px 5px #a75b7d44);-webkit-mask-image:radial-gradient(ellipse at center,#000 40%,#000a 70%,transparent 97%);mask-image:radial-gradient(ellipse at center,#000 40%,#000a 70%,transparent 97%)}.warning-words{position:absolute;right:0;top:7px;background:#fff8fcf2;border:1px solid #e8b4c9;border-radius:20px 20px 20px 4px;padding:9px 10px;font-size:clamp(10px,3vw,12px);line-height:1.55;text-align:center;color:#9a516e;transform:rotate(4deg)}
 #warning-accept{width:100%;min-height:53px;margin-top:5px;padding:10px 8px;border:2px solid #fff6fb;border-radius:60px;background:linear-gradient(160deg,#ffc2db,#ec79a2);color:#842e55;font-weight:900;font-size:clamp(14px,4vw,17px);box-shadow:0 4px 0 #a35c7d,0 7px 16px #9e617b50}#warning-accept:active{transform:translateY(2px)}#warning-back{display:block;margin:14px auto 0;background:transparent;border:none;color:#936579;font-size:12px;text-decoration:underline}
 @media(max-height:670px){#warning.active{align-items:flex-start}.warning-card{padding-top:13px;padding-bottom:12px}.warning-sd-zone{min-height:115px;max-height:19vh}.warning-sd-zone img{height:130px}.warning-header h2{margin-bottom:5px}.warning-age{margin:8px 0}.warning-bullets{padding:5px 10px}.warning-bullets p{margin:0}#title #start{height:55px;bottom:calc(12% + env(safe-area-inset-bottom))}}
+
+/* Illustrated title v8: restore the original scenic artwork while covering baked-in old copy. */
+#title{isolation:isolate;background:radial-gradient(ellipse at 27% 9%,#fffdfd 0%,#fde9f0 29%,transparent 57%),linear-gradient(166deg,#ffe6ef 0%,#f7c3d6 51%,#b97092 88%,#62354f 100%)}
+#title .title-bg{position:absolute;inset:0;overflow:hidden;background:radial-gradient(circle at 15% 74%,#fff7e655,transparent 39%),radial-gradient(circle at 93% 52%,#e6a9d166,transparent 60%)}
+#title .title-bg::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,#fff4f9dc 0%,#ffe6f28a 19%,transparent 37%,transparent 63%,#ba708a85 79%,#5f344d9e 100%)}
+#title .title-bg::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;box-shadow:inset 0 0 24px #eeabc0a8;border:solid 7px transparent;border-image:linear-gradient(180deg,#fff8f0a0,transparent 55%,#e7adba70) 1}
+#title .title-scene{position:absolute;top:0;left:50%;height:100%;width:auto;max-width:none;transform:translateX(-25%);object-fit:contain;opacity:.97;filter:saturate(.98) contrast(1.025);-webkit-mask-image:linear-gradient(180deg,transparent 0%,transparent 22%,#000 33%,#000 64%,transparent 77%);mask-image:linear-gradient(180deg,transparent 0%,transparent 22%,#000 33%,#000 64%,transparent 77%)}
+#title .title-starlight{position:absolute;z-index:3;color:#ffedf7;text-shadow:0 2px 13px #bb5582;font-weight:700;pointer-events:none}
+#title .star-one{top:29%;left:5%;font-size:33px}#title .star-two{top:48%;right:5%;font-size:29px}#title .star-three{top:69%;left:7%;font-size:32px}
+#title .title-brand{position:absolute;z-index:5;top:calc(4.5% + env(safe-area-inset-top));left:5%;right:5%;text-align:center;color:#803653;text-shadow:none}
+#title .title-kicker{display:flex;align-items:center;justify-content:center;gap:10px;color:#ac627d;font-size:10px;font-weight:800;letter-spacing:.21em;text-transform:uppercase}
+#title .title-kicker::before,#title .title-kicker::after{content:"";height:1px;width:34px;background:#ca8fa4}
+#title h1{margin:8px 0 4px;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;font-size:clamp(31px,8.7vw,47px);line-height:1.11;letter-spacing:.02em;font-weight:900;color:#8c3654;-webkit-text-stroke:0;text-shadow:0 2px 0 #fff,1px 4px 7px #dfb1c2}
+#title h1 em{font-style:normal;color:#ad3d6b;font-size:1.02em;white-space:nowrap;letter-spacing:-.045em}
+#title h1 span{font-family:serif;color:#d35b8a;font-size:.79em;vertical-align:.04em}
+#title .title-brand p{display:inline-block;max-width:95%;margin:10px auto 0;padding:7px 19px 8px;border:1px solid #ffffff;background:#fff6faf2;color:#70344d;font-size:clamp(12px,3.4vw,14px);font-weight:800;line-height:1.5;letter-spacing:.06em;border-radius:40px;box-shadow:0 3px 12px #7c3b5259;text-shadow:none}
+#title #start{position:absolute;z-index:5;left:11%;right:11%;width:78%;top:auto;bottom:calc(11.8% + env(safe-area-inset-bottom));height:65px;display:flex;justify-content:center;align-items:center;background:linear-gradient(180deg,#ffd9e5 0%,#e889ad 22%,#d95286 100%);border:2px solid #fff7fd;outline:1px solid #ac6582;outline-offset:3px;border-radius:99px;box-shadow:0 5px 0 #873f64,0 10px 25px #4e243d77,inset 0 3px 6px #ffedf7;color:#fff}
+#title #start .start-label{font-size:clamp(23px,6.4vw,29px);font-weight:850;letter-spacing:.12em;text-shadow:0 2px 3px #812c54b8}
+#title #start .start-label span{font-size:.82em}#title #start:active{transform:translateY(3px);box-shadow:0 2px 0 #873f64,0 6px 16px #4e243d66}
+#title #memory-tip{bottom:calc(2.8% + env(safe-area-inset-bottom));padding:8px 13px;border:1px solid #fff7fb;background:#fff4fae8;color:#793951;border-radius:30px;font-size:11px;font-weight:800;text-shadow:none;box-shadow:0 2px 10px #3d1b3459}
+@media(max-height:680px){#title .title-brand{top:calc(2.3% + env(safe-area-inset-top))}#title h1{font-size:clamp(29px,8.4vw,43px)}#title .title-brand p{margin-top:6px;padding:5px 13px}#title #start{height:54px;bottom:calc(13% + env(safe-area-inset-bottom))}}
 </style></head>
 <body>
 <main id="app">
 <section class="screen active" id="title">
  <div class="title-bg" aria-hidden="true">
+  <img class="title-scene" src="./assets/sprite.webp" alt="">
   <span class="title-starlight star-one">✧</span><span class="title-starlight star-two">♡</span><span class="title-starlight star-three">✿</span>
-  <img class="title-hero" src="./assets/misaki-plus2.webp" alt="">
  </div>
  <div class="title-brand"><span class="title-kicker">Sweet chat with Misaki</span><h1>彼女と<br><em>ひみつの時間<span>♡</span></em></h1><p>大好きな彼女と、<br>ふたりだけのおしゃべり。</p></div>
  <button id="start" aria-label="はじめる" type="button"><span class="start-label">はじめる <span>♡</span></span></button>
