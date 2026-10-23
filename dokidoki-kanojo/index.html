@@ -21,19 +21,21 @@ button{font:inherit;touch-action:manipulation;cursor:pointer}
 #scare.noart .fallback{display:flex;background:radial-gradient(ellipse at center,#65151c,#130a11 76%)}
 #flash{position:absolute;inset:0;z-index:30;background:#fff;opacity:0;pointer-events:none}
 #dark{position:absolute;inset:0;z-index:29;background:#000;opacity:0;pointer-events:none}
-#chat{background:#d5d8d1;color:#222}
-#chat .mist{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.20}
-#chat .mist img{position:absolute;top:0;height:100%;width:auto;left:50%;transform:translateX(-25%);filter:blur(2px);max-width:none}
-#chat.danger .mist{opacity:.32;filter:grayscale(.8)}
+#chat{background:#312c38;color:#222;--pose:0%;}
+#chat .mist{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:#38303e}
+#chat .portrait{position:absolute;inset:-2% -10% -1% -5%;background-image:url("./assets/emotions.webp");background-size:500% 100%;background-position:var(--pose) center;background-repeat:no-repeat;opacity:.91;transform:translateX(8%) scale(1.035);filter:brightness(.88) saturate(.78);transition:filter .24s,opacity .24s}
+#chat .mist:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,26,39,.48),rgba(27,24,36,.27) 47%,rgba(27,23,39,.52))}
+#chat.danger .portrait{filter:brightness(.74) saturate(.65)}
+#chat.danger .mist:after{background:linear-gradient(180deg,#241b32a6,#34263849 45%,#251622a6)}
 #chat.danger{background:#b6b5b7}
 #chat.danger::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 120px #60091d55;pointer-events:none;z-index:3}
 .hdr{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;gap:13px;background:#f5f5f3ed;padding:calc(env(safe-area-inset-top) + 10px) 15px 12px;box-shadow:0 2px 8px #0002}
-.avatar{border:2px solid #fff;background:#c9a2b7;color:#fff;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:22px}
+.avatar{border:2px solid #fff;background-color:#c9a2b7;background-image:url("./assets/emotions.webp");background-size:500% 245%;background-position:var(--pose) 20%;background-repeat:no-repeat;width:40px;height:40px;border-radius:50%;flex-shrink:0}
 .nm{font-weight:800;font-size:18px}.online{font-size:11px;color:#92999c;margin-top:2px}
 .back{margin-left:auto;border:0;border-radius:9px;padding:8px 10px;background:#e9e7eb;color:#444}
 #timeline{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top) + 72px);bottom:220px;overflow:auto;padding:18px 14px 25px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;scrollbar-width:none;z-index:4}
 .line{display:flex;gap:8px;align-items:flex-end;max-width:90%}.line.me{align-self:flex-end}
-.face{width:30px;height:30px;border-radius:50%;background:#b9829f;border:2px solid #fff;color:white;display:grid;place-items:center;flex-shrink:0;font-size:14px}
+.face{width:32px;height:32px;border-radius:50%;background-color:#b9829f;background-image:url("./assets/emotions.webp");background-size:500% 245%;background-position:var(--pose) 20%;background-repeat:no-repeat;border:2px solid #fff;flex-shrink:0}
 .bubble{background:#fff;color:#292b2c;padding:11px 13px;border-radius:14px 14px 14px 3px;font-size:16px;line-height:1.5;white-space:pre-wrap;box-shadow:0 2px 4px #0001}
 .me .bubble{background:#b4eb91;border-radius:14px 14px 3px 14px}
 #options{position:absolute;left:0;right:0;bottom:0;min-height:212px;background:#292333e8;padding:12px 14px calc(15px + env(safe-area-inset-bottom));display:flex;flex-direction:column;justify-content:flex-end;gap:9px;z-index:5}
@@ -50,8 +52,8 @@ button{font:inherit;touch-action:manipulation;cursor:pointer}
 <main id="app">
 <section id="title" class="screen active"><div class="poster"><img class="art" alt="" src="./assets/sprite.webp"></div><div class="fallback"><div class="icon">🌸</div><b>ドキドキ彼女！</b><p>大好きな彼女とのLINE</p></div><button id="start" aria-label="はじめる"><span class="vis-label">はじめる ♡</span></button></section>
 <section id="scare" class="screen"><div class="poster"><img class="art" alt="" src="./assets/sprite.webp"></div><div class="fallback"><div class="icon">🔪</div><b>ずっと一緒だよ？</b></div></section>
-<section id="chat" class="screen"><div class="mist"><img class="art" src="./assets/sprite.webp" alt=""></div>
-<div class="hdr"><div class="avatar">♡</div><div><div class="nm">美咲 ♡</div><div class="online">オンライン</div></div><button class="back" id="home">戻る</button></div>
+<section id="chat" class="screen"><div class="mist"><div class="portrait" id="portrait" role="img" aria-label="美咲の表情：通常"></div></div>
+<div class="hdr"><div class="avatar" aria-hidden="true"></div><div><div class="nm">美咲 ♡</div><div class="online">オンライン</div></div><button class="back" id="home">戻る</button></div>
 <div id="timeline" aria-live="polite"></div><div id="options"></div>
 <div id="end"><h2>GAME OVER</h2><p>ねぇ、約束したよね？<br>ずっと一緒だって♡</p><button id="restart">もう一度</button></div><div id="red"></div>
 </section>
@@ -71,15 +73,22 @@ const story=[
 ];
 function sleep(n,t){return new Promise(resolve=>{setTimeout(()=>resolve(n===epoch),t)})}
 function page(el){for(const p of pages)p.classList.remove('active');el.classList.add('active')}
-function reset(){epoch++;busy=false;miss=0;mood=0;step=0;dead=false;timeline.innerHTML='';opts.innerHTML='';chat.classList.remove('danger');$('end').style.display='none';flash.style.opacity='0';dark.style.opacity='0';red.style.opacity='0';page($('title'))}
-function line(text,mine=false){const wrap=document.createElement('div');wrap.className='line'+(mine?' me':'');if(!mine){const av=document.createElement('span');av.className='face';av.textContent='♡';wrap.appendChild(av)}const b=document.createElement('div');b.className='bubble';b.textContent=text;wrap.appendChild(b);timeline.appendChild(wrap);timeline.scrollTop=timeline.scrollHeight}
+function reset(){epoch++;busy=false;miss=0;mood=0;step=0;dead=false;timeline.innerHTML='';opts.innerHTML='';chat.classList.remove('danger');setMood();$('end').style.display='none';flash.style.opacity='0';dark.style.opacity='0';red.style.opacity='0';page($('title'))}
+function line(text,mine=false){const wrap=document.createElement('div');wrap.className='line'+(mine?' me':'');if(!mine){const av=document.createElement('span');av.className='face';av.setAttribute('aria-hidden','true');wrap.appendChild(av)}const b=document.createElement('div');b.className='bubble';b.textContent=text;wrap.appendChild(b);timeline.appendChild(wrap);timeline.scrollTop=timeline.scrollHeight}
 async function intro(){if(busy)return;busy=true;let n=++epoch;
  flash.style.opacity='1';
  if(!await sleep(n,85))return;page($('scare'));flash.style.opacity='0';
  if(!await sleep(n,145))return;dark.style.opacity='1';
  if(!await sleep(n,1050))return;page(chat);setMood();drawScene(n);
  if(!await sleep(n,130))return;dark.style.opacity='0';busy=false}
-function setMood(){chat.classList.toggle('danger',miss>0)}
+function setMood(){
+ const positions={'0':'0%','1':'25%','2':'50%','-1':'75%','-2':'100%'};
+ const labels={'0':'通常','1':'＋1','2':'＋2','-1':'－1','-2':'－2'};
+ chat.style.setProperty('--pose',positions[String(mood)]??'0%');
+ chat.dataset.mood=String(mood);
+ $('portrait').setAttribute('aria-label','美咲の表情：'+labels[String(mood)]);
+ chat.classList.toggle('danger',mood<0);
+}
 async function drawScene(n){if(step>=story.length){opts.innerHTML='';line('大好き。これからも、ずっと。♡');return}
  const s=story[step];opts.innerHTML='';
  for(const m of s.m){if(!await sleep(n,430))return;line(m)}
