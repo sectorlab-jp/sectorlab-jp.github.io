@@ -4,8 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#191723">
-<meta name="description" content="ドキドキ彼女！ 大好きな彼女とのLINE。返信、まちがえないでね？">
-<title>ドキドキ彼女！</title>
+<meta name="description" content="彼女とひみつの時間♡ 大好きな彼女と、ふたりだけのおしゃべり。返事は慎重にね♡">
+<title>彼女とひみつの時間♡</title>
+<meta property="og:title" content="彼女とひみつの時間♡">
+<meta property="og:description" content="大好きな彼女と、ふたりだけのおしゃべり。">
 <style>
 :root{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#18121f}button{font:inherit;touch-action:manipulation;cursor:pointer}button:focus-visible{outline:2px solid #ffa7d6;outline-offset:2px}
@@ -60,10 +62,54 @@
 #browser-guide-panel .guide-note{color:#cdb9d0;font-size:11px;line-height:1.5;margin-bottom:12px}
 #browser-guide-close{width:100%;border:0;border-radius:99px;background:#efabc9;color:#251826;font-weight:800;padding:13px;margin-top:3px}
 @media(min-height:750px){#memory-tip{bottom:calc(16px + env(safe-area-inset-bottom))}}
+
+/* Sweet title / warning designed for smartphone and desktop */
+#title{background:linear-gradient(155deg,#ffe2f0 0%,#ffbed8 48%,#b46f9e 100%);isolation:isolate}
+#title .title-bg{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 19% 16%,#fffefa99,transparent 49%),radial-gradient(ellipse at 83% 70%,#d98caf88,transparent 56%),repeating-radial-gradient(circle at 9% 25%,#ffffff2e 0 1px,transparent 2px 40px)}
+#title .title-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#fff4f9b5 0%,#ffffff08 31%,#efb9cd00 67%,#51213c9d 100%);pointer-events:none}
+#title .title-hero{position:absolute;top:21%;right:-7%;width:112%;height:65%;object-fit:contain;object-position:center;opacity:.97;filter:saturate(1.08) brightness(1.12);-webkit-mask-image:linear-gradient(180deg,transparent 0%,black 10%,black 76%,transparent 99%);mask-image:linear-gradient(180deg,transparent 0%,black 10%,black 76%,transparent 99%)}
+#title .title-starlight{position:absolute;z-index:1;color:#fff3f8;text-shadow:0 2px 11px #da8db5aa;font-weight:900;pointer-events:none}#title .star-one{top:22%;left:9%;font-size:44px}#title .star-two{top:47%;right:5%;font-size:30px}#title .star-three{top:65%;left:6%;font-size:39px}
+#title .title-brand{position:absolute;z-index:2;top:calc(6% + env(safe-area-inset-top));left:5%;right:5%;text-align:center;color:#8a315a;text-shadow:0 1px 2px #fff9}#title .title-kicker{display:block;letter-spacing:.24em;text-transform:uppercase;color:#b46a8b;font-size:10px;font-weight:700}#title h1{font-size:clamp(34px,10vw,53px);line-height:1.18;letter-spacing:.035em;margin:10px 0 12px;font-weight:900;color:#ba3b73;-webkit-text-stroke:1px #fff7fa;filter:drop-shadow(1px 3px 1px #fff)}#title h1 em{font-style:normal;font-size:.86em;white-space:nowrap;color:#cf4b82}#title h1 span{color:#f577a6;font-size:.7em}#title .title-brand p{margin:0;font-size:clamp(12px,3.7vw,15px);line-height:1.5;letter-spacing:.055em;color:#803a5b;font-weight:750}
+#title #start{position:absolute;z-index:4;inset:auto;left:10%;right:10%;top:auto;bottom:calc(12% + env(safe-area-inset-bottom));width:80%;height:65px;border-radius:60px;background:linear-gradient(170deg,#ffc3da,#e96e9d 75%);border:2px solid #fff3f9;box-shadow:0 5px 0 #a75676,0 13px 26px #7e2e6273,inset 0 3px 7px #fff8;color:white;display:flex;justify-content:center;align-items:center}#title #start .start-label{font-weight:900;font-size:clamp(23px,6vw,28px);letter-spacing:.10em;text-shadow:0 2px 3px #9a335d8a}#title #start .start-label span{font-size:.85em}#title #start:active{transform:translateY(3px);box-shadow:0 2px 0 #a75676,0 6px 15px #7e2e6266}
+#title #memory-tip{bottom:calc(3.2% + env(safe-area-inset-bottom));background:#ffffffbf;color:#994666;border-color:#fff;padding:8px 12px;font-size:11px;text-shadow:none;box-shadow:0 4px 13px #85516b45}
+#warning{background:radial-gradient(ellipse at 50% 7%,#80516c,#211823 70%);color:#542c43;overflow-y:auto;overscroll-behavior:contain}#warning.active{display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top)) 14px calc(15px + env(safe-area-inset-bottom))}#warning .warning-stars{position:fixed;top:3%;font-size:25px;letter-spacing:.8em;color:#f7b4d6bb;pointer-events:none}
+.warning-card{position:relative;width:100%;max-width:450px;margin:auto;padding:clamp(17px,3.5vh,26px) clamp(16px,4vw,27px) clamp(14px,2.5vh,21px);background:linear-gradient(158deg,#fff8fa,#ffedf4 54%,#f6d6e5);border:2px solid #f5c7d8;outline:2px solid #805168;outline-offset:3px;border-radius:23px;box-shadow:0 0 0 10px #6d43572b,0 20px 55px #0008,inset 0 0 24px #f6cddf55}
+.warning-card::before{content:'♡　✿　♡　✿　♡';position:absolute;left:0;right:0;top:-14px;text-align:center;color:#f4b2ce;text-shadow:0 1px 1px #8b476b;letter-spacing:.65em;font-size:17px}
+.warning-header{display:flex;gap:6px;justify-content:space-around;align-items:center;text-align:center;color:#a34b71}.warning-header h2{margin:2px 0 10px;font-size:clamp(21px,6.3vw,27px);line-height:1.3;color:#8e2c51}.warning-header small{display:block;color:#bb7a98;font-size:10px;letter-spacing:.13em}.warning-flower{font-size:20px;color:#dfa0b9}
+.warning-lead{text-align:center;font-size:clamp(12px,3.4vw,14px);font-weight:650;line-height:1.5;margin:3px 0 10px}.warning-bullets{padding:10px 11px;background:#fff9fc;border:1px solid #f7d6e3;border-radius:12px;font-size:clamp(12px,3.5vw,14px);line-height:1.5}.warning-bullets p{margin:2px 0;color:#74374f}.warning-bullets p::first-letter{color:#e2759b}
+.warning-age{text-align:center;border:1px solid #eeb6cd;background:linear-gradient(90deg,#fff2f6,#f9d9e8,#fff2f6);padding:9px 5px;border-radius:10px;margin:11px 0 9px;font-weight:700;font-size:clamp(15px,4.1vw,18px);color:#7d3c59}.warning-age strong{color:#b13766;font-size:1.26em}
+.warning-disclaimer{font-size:clamp(10px,2.65vw,12px);line-height:1.5;text-align:center;color:#7b5a68;margin:6px 0 4px}
+.warning-sd-zone{position:relative;display:flex;align-items:center;justify-content:center;min-height:clamp(130px,24vh,208px);max-height:24vh;margin-top:2px;overflow:hidden}.warning-sd-zone img{height:clamp(150px,26vh,218px);width:auto;max-width:70%;object-fit:contain;object-position:center;filter:drop-shadow(0 4px 5px #a75b7d44);-webkit-mask-image:radial-gradient(ellipse at center,#000 40%,#000a 70%,transparent 97%);mask-image:radial-gradient(ellipse at center,#000 40%,#000a 70%,transparent 97%)}.warning-words{position:absolute;right:0;top:7px;background:#fff8fcf2;border:1px solid #e8b4c9;border-radius:20px 20px 20px 4px;padding:9px 10px;font-size:clamp(10px,3vw,12px);line-height:1.55;text-align:center;color:#9a516e;transform:rotate(4deg)}
+#warning-accept{width:100%;min-height:53px;margin-top:5px;padding:10px 8px;border:2px solid #fff6fb;border-radius:60px;background:linear-gradient(160deg,#ffc2db,#ec79a2);color:#842e55;font-weight:900;font-size:clamp(14px,4vw,17px);box-shadow:0 4px 0 #a35c7d,0 7px 16px #9e617b50}#warning-accept:active{transform:translateY(2px)}#warning-back{display:block;margin:14px auto 0;background:transparent;border:none;color:#936579;font-size:12px;text-decoration:underline}
+@media(max-height:670px){#warning.active{align-items:flex-start}.warning-card{padding-top:13px;padding-bottom:12px}.warning-sd-zone{min-height:115px;max-height:19vh}.warning-sd-zone img{height:130px}.warning-header h2{margin-bottom:5px}.warning-age{margin:8px 0}.warning-bullets{padding:5px 10px}.warning-bullets p{margin:0}#title #start{height:55px;bottom:calc(12% + env(safe-area-inset-bottom))}}
 </style></head>
 <body>
 <main id="app">
-<section class="screen active" id="title"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div><button id="start" aria-label="はじめる"><span class="fallback-title">ドキドキ彼女！<br><b>大好きな彼女とのLINE</b><br>はじめる ♡</span></button><button type="button" id="memory-tip" aria-haspopup="dialog" aria-controls="browser-guide">♡ 美咲との思い出を残す？</button><div id="browser-guide" role="dialog" aria-modal="true" aria-labelledby="browser-guide-title"><div id="browser-guide-panel"><h2 id="browser-guide-title">思い出を残すには？ ♡</h2><p>いつも使うブラウザで遊んでね。<br>同じブラウザなら、美咲が前の記録を覚えていられるかも。</p><div id="browser-guide-how" class="guide-action"></div><p class="guide-note">※ X内のブラウザと外部ブラウザでは記録が共有されないことがあるよ。保存はブラウザの設定やデータ削除にも左右されるよ。現在は周回の記憶や名前を使うシークレット機能は制作中。</p><button type="button" id="browser-guide-close">わかった♡ ゲームへ戻る</button></div></div></section>
+<section class="screen active" id="title">
+ <div class="title-bg" aria-hidden="true">
+  <span class="title-starlight star-one">✧</span><span class="title-starlight star-two">♡</span><span class="title-starlight star-three">✿</span>
+  <img class="title-hero" src="./assets/misaki-plus2.webp" alt="">
+ </div>
+ <div class="title-brand"><span class="title-kicker">Sweet chat with Misaki</span><h1>彼女と<br><em>ひみつの時間<span>♡</span></em></h1><p>大好きな彼女と、<br>ふたりだけのおしゃべり。</p></div>
+ <button id="start" aria-label="はじめる" type="button"><span class="start-label">はじめる <span>♡</span></span></button>
+ <button type="button" id="memory-tip" aria-haspopup="dialog" aria-controls="browser-guide">♡ 美咲との思い出を残す？</button>
+ <div id="browser-guide" role="dialog" aria-modal="true" aria-labelledby="browser-guide-title"><div id="browser-guide-panel"><h2 id="browser-guide-title">思い出を残すには？ ♡</h2><p>いつも使うブラウザで遊んでね。<br>同じブラウザなら、美咲が前の記録を覚えていられるかも。</p><div id="browser-guide-how" class="guide-action"></div><p class="guide-note">※ X内のブラウザと外部ブラウザでは記録が共有されないことがあるよ。保存はブラウザの設定やデータ削除にも左右されるよ。現在は周回の記憶や名前を使うシークレット機能は制作中。</p><button type="button" id="browser-guide-close">わかった♡ ゲームへ戻る</button></div></div>
+</section>
+<section class="screen" id="warning">
+ <div class="warning-stars" aria-hidden="true">♡　✿　♡　✧　♡</div>
+ <div class="warning-card">
+  <div class="warning-header"><span class="warning-flower">✿</span><div><small>Before you play</small><h2>プレイ前のご案内</h2></div><span class="warning-flower">✿</span></div>
+  <p class="warning-lead">この作品には、以下の表現が含まれるよ。</p>
+  <div class="warning-bullets">
+   <p>♡ ホラー・心理的恐怖</p><p>♡ 流血・刃物・暴力表現</p><p>♡ 監禁・拷問を示唆する表現</p><p>♡ 突然驚かせる演出</p><p>♡ 画面の点滅・フラッシュ</p>
+  </div>
+  <div class="warning-age">推奨年齢：<strong>15歳以上</strong></div>
+  <p class="warning-disclaimer">※ 制作者による自主設定（公式の年齢区分ではないよ）<br>※ 気分が悪くなったら、すぐにプレイをやめてね。</p>
+  <div class="warning-sd-zone"><img id="warning-chibi" src="./assets/warning-chibi.webp" alt="泣きそうなデフォルメ姿の美咲" onerror="this.onerror=null;this.src='./assets/misaki-plus1.webp'"><div class="warning-words">うぅ…<br>こわがらせたら<br>ごめんね… ♡</div></div>
+  <button type="button" id="warning-accept">内容を理解してプレイする ♡</button>
+  <button type="button" id="warning-back">タイトルに戻る</button>
+ </div>
+</section>
 <section class="screen" id="scare"><div class="poster"><img class="art" src="./assets/sprite.webp" alt=""></div></section>
 <section class="screen" id="chat"><div class="mist"><img id="portrait" src="./assets/misaki-normal.webp" alt="美咲の表情：通常"></div>
 <header id="header"><button id="back" aria-label="タイトルに戻る"><svg viewBox="0 0 24 24"><path d="m15 4-8 8 8 8"/></svg></button><div id="who"><strong>美咲 ♡</strong><small>オンライン</small></div><div class="tools" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="m15.3 15.3 5 5"/></svg><svg viewBox="0 0 24 24"><path d="M5 4.5c1-.7 2-.5 2.6.2l2.1 2.2c.6.7.6 1.6 0 2.3l-1.2 1.4c1.4 2.3 3.2 4.1 5.5 5.5l1.4-1.2c.7-.6 1.6-.6 2.3 0l2.2 2.1c.7.6.9 1.6.2 2.6l-1.5 1.6c-.8.8-1.8 1.2-3.1.8C10.7 21 3 13.3 2 8.1c-.3-1.2.1-2.3.8-3.1Z"/></svg><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div></header>
@@ -76,7 +122,8 @@
 'use strict';
 const el=id=>document.getElementById(id);
 const title=el('title'),scare=el('scare'),chat=el('chat'),white=el('white'),black=el('black'),red=el('red'),timeline=el('timeline'),choices=el('choices'),portrait=el('portrait');
-const scenes=[title,scare,chat];
+const warning=el('warning');
+const scenes=[title,warning,scare,chat];
 const faceImages={0:'normal',1:'plus1',2:'plus2',[-1]:'minus1',[-2]:'minus2'};
 const moods={0:'通常',1:'＋1',2:'＋2',[-1]:'－1',[-2]:'－2'};
 for(const name of Object.values(faceImages)){const img=new Image();img.src=`./assets/misaki-${name}.webp`}
@@ -117,7 +164,9 @@ const browserGuide=el('browser-guide'),browserGuideTip=el('memory-tip'),browserG
  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&browserGuide.classList.contains('open'))closeGuide()});
  if(inX)openGuide(); // Detection is best-effort; manual guidance stays visible on all devices.
 })();
-el('start').addEventListener('click',intro);el('back').addEventListener('click',reset);el('restart').addEventListener('click',reset);
+el('start').addEventListener('click',()=>{if(!busy)show(warning)});
+el('warning-accept').addEventListener('click',intro);
+el('warning-back').addEventListener('click',()=>show(title));el('back').addEventListener('click',reset);el('restart').addEventListener('click',reset);
 document.querySelectorAll('.art').forEach(img=>{img.addEventListener('error',()=>img.closest('.screen').classList.add('noart'))});
 setMood();
 </script></body></html>
