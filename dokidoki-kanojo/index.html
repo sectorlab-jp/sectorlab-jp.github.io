@@ -137,12 +137,37 @@
 #title #browser-guide{z-index:14}
 @media(max-height:690px){#title #start{top:85.1%;height:8.7%;bottom:auto}#title #memory-tip{top:76.8%;height:7.4%;bottom:auto}#warning #warning-accept{top:77.1%;height:9.2%}#warning #warning-back{top:89.3%;height:5.1%}}
 
+
+/* v11 fix: show a real, legible memory button over the artwork's empty text plate. */
+#title.image-screen #memory-tip.memory-visible{
+  position:absolute;z-index:9;left:12%;right:12%;width:76%;
+  top:76.65%;bottom:auto;height:7.8%;min-height:47px;max-height:77px;
+  display:flex;justify-content:center;align-items:center;gap:8px;
+  margin:0;padding:0 12px;overflow:hidden;
+  background:linear-gradient(180deg,#fffdfa 0%,#fff0f7 76%,#f9dbe8 100%);
+  border:2px solid #fffdfc;border-radius:999px;
+  outline:1px solid #bf7196;outline-offset:0;
+  color:#823c5d;font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+  font-size:clamp(16px,4.6vw,21px);line-height:1.15;
+  font-weight:800;letter-spacing:-.04em;white-space:nowrap;
+  text-shadow:0 1px 0 #fff;opacity:1;
+  box-shadow:0 3px 0 #a45d7d,0 7px 16px #3721306b,inset 0 2px 5px #fff;
+  appearance:none;-webkit-appearance:none;transform:none;
+  -webkit-backdrop-filter:none;backdrop-filter:none
+}
+#title #memory-tip.memory-visible .memory-icon{font-family:serif;font-size:1.18em;color:#b24977;line-height:1;flex-shrink:0}
+#title #memory-tip.memory-visible .memory-label{display:inline;overflow:visible;white-space:nowrap;flex-shrink:0}
+#title #memory-tip.memory-visible .memory-arrow{font-family:sans-serif;font-size:1.3em;color:#ac577b;line-height:1;flex-shrink:0}
+#title #memory-tip.memory-visible:active{background:#ffe1ed;transform:translateY(2px);box-shadow:0 1px 0 #a45d7d,0 3px 9px #3721306b}
+#title #memory-tip.memory-visible:focus-visible{outline:3px solid #803854;outline-offset:3px}
+@media(max-width:360px){#title.image-screen #memory-tip.memory-visible{font-size:clamp(15px,4.5vw,18px);gap:5px;padding:0 9px}}
+@media(max-height:690px){#title.image-screen #memory-tip.memory-visible{top:76.65%;bottom:auto;height:7.8%;min-height:39px}}
 </style></head>
 <body>
 <main id="app">
 <section class="screen active image-screen" id="title">
  <img class="full-screen-art" src="./assets/himitsu-title.webp" alt="彼女とひみつの時間♡ 大好きな彼女と、ふたりだけのおしゃべり。美咲のいる部屋のタイトル画面" draggable="false" fetchpriority="high">
- <button type="button" class="art-hit" id="memory-tip" aria-haspopup="dialog" aria-controls="browser-guide" aria-label="美咲との思い出を残す？"><span class="visually-hidden">♡ 美咲との思い出を残す？</span></button>
+ <button type="button" class="art-hit memory-visible" id="memory-tip" aria-haspopup="dialog" aria-controls="browser-guide" aria-label="美咲との思い出を残す？"><span class="memory-icon" aria-hidden="true">♡</span><span class="memory-label">美咲との思い出を残す？</span><span class="memory-arrow" aria-hidden="true">›</span></button>
  <button type="button" class="art-hit" id="start" aria-label="はじめる"><span class="visually-hidden">はじめる</span></button>
  <div id="browser-guide" role="dialog" aria-modal="true" aria-labelledby="browser-guide-title"><div id="browser-guide-panel"><h2 id="browser-guide-title">思い出を残すには？ ♡</h2><p>いつも使うブラウザで遊んでね。<br>同じブラウザなら、美咲が前の記録を覚えていられるかも。</p><div id="browser-guide-how" class="guide-action"></div><p class="guide-note">※ X内のブラウザと外部ブラウザでは記録が共有されないことがあるよ。保存はブラウザの設定やデータ削除にも左右されるよ。現在は周回の記憶や名前を使うシークレット機能は制作中。</p><button type="button" id="browser-guide-close">わかった♡ ゲームへ戻る</button></div></div>
 </section>
