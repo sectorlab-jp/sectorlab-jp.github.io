@@ -193,16 +193,17 @@ function step(dt){
   else{
    g.climbTime+=dt;
    // Reach the first landmark quickly; long unbroken climbs unlock exhilarating speed.
-   let base=7+Math.min(19,g.climbTime*2.6);
-   let multiplier=1+Math.pow(g.h/190,.57);
+   let base=10+Math.min(28,g.climbTime*3.4);
+   let multiplier=1+Math.pow(g.h/170,.60);
    if(g.h>100000)multiplier*=1+23*Math.pow(g.h/100000,.46);
    g.h+=base*multiplier*dt;
   }
   // Nonlinear inverted-pendulum approximation; the hold force is one-way per press.
   // A steeper difficulty curve from 20m to 1.2km, rather than only at extreme heights.
   const difficulty=clamp(Math.log1p(g.h/20)/Math.log1p(1200/20),0,1);
-  const gravity=2.7+3.9*difficulty;
-  const disturbance=(Math.sin(g.time*.91+.4)*.105+Math.sin(g.time*2.17)*.065+Math.sin(g.time*.29+1.1)*.04)*(1+1.45*difficulty);
+  const warmup=.45+.55*smooth(g.time/3);
+  const gravity=(2.7+3.9*difficulty)*warmup;
+  const disturbance=(Math.sin(g.time*.91+.4)*.105+Math.sin(g.time*2.17)*.065+Math.sin(g.time*.29+1.1)*.04)*(1+1.45*difficulty)*warmup;
   const stepWobble=g.held?0:Math.sin(g.time*14)*(.025+.04*difficulty);
   const force=g.held?-g.push*(4+2.5*difficulty):0;
   const accel=gravity*Math.sin(g.theta)+disturbance+stepWobble+force-1.0*g.omega;
