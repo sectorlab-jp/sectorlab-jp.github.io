@@ -39,9 +39,15 @@ body{font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"Hiragino Maru Goth
 #danger{position:absolute;z-index:3;top:calc(env(safe-area-inset-top,0px) + 185px);left:50%;transform:translateX(-50%);font-size:14px;font-weight:1000;color:#fff;text-shadow:0 2px 3px #af3b39;opacity:0;transition:opacity .15s;pointer-events:none}
 #danger.show{opacity:1;animation:pulse .55s infinite alternate}
 @keyframes pulse{to{transform:translateX(-50%) scale(1.12)}}
-.bottom{position:absolute;z-index:3;bottom:calc(env(safe-area-inset-bottom,0px) + 17px);left:12px;right:12px;display:flex;justify-content:center;pointer-events:none}
-.instruction{padding:12px 16px;min-width:205px;text-align:center;border:2px solid #fff6;border-radius:18px;box-shadow:0 8px 22px #325d7038;background:#fffffff0;color:#28556c;font-size:13px;line-height:1.45;font-weight:900;transition:transform .12s}
+.bottom{position:absolute;z-index:3;bottom:calc(env(safe-area-inset-bottom,0px) + 17px);left:12px;right:12px;display:flex;flex-direction:column;gap:9px;align-items:center;pointer-events:none}
+.instruction{padding:9px 15px;max-width:min(95%,360px);min-width:205px;text-align:center;border:2px solid #fff6;border-radius:18px;box-shadow:0 8px 22px #325d7038;background:#fffffff0;color:#28556c;font-size:12px;line-height:1.45;font-weight:900;transition:transform .12s}
 .instruction.holding{background:#ffefcf;color:#af6139;transform:scale(1.04)}
+.holdzones{width:min(530px,100%);display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.holdzone{padding:13px 10px 12px;background:#fffdf4d9;border:2px solid #ffffffd9;border-radius:18px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 6px 18px #1d637d33;color:#396e86;min-height:68px;transition:transform .1s,background .1s}
+.holdzone strong{font-size:17px;letter-spacing:-.02em}.holdzone span{font-size:11px;font-weight:900}
+.holdzone.active{background:#ffd57ef0;border-color:#fff7df;transform:scale(1.04);color:#905328}
+#nextGoal{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 148px);transform:translateX(-50%);pointer-events:none;background:#ffffffb9;border:1px solid #ffffffb8;border-radius:99px;padding:6px 12px;font-size:11px;font-weight:900;color:#3c708d;white-space:nowrap;max-width:95%;text-overflow:ellipsis;overflow:hidden}
+@media(max-height:620px){.holdzone{min-height:49px;padding:5px 8px}.holdzone strong{font-size:14px}.bottom{gap:4px}}
 .overlay{position:absolute;z-index:10;inset:0;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 19px calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(180deg,#e3faff2e,#5f9ccb44);backdrop-filter:blur(4px)}
 .overlay.hidden{display:none}
 .panel{width:min(405px,100%);padding:30px 23px 23px;background:#fffdf5f5;border:3px solid #fff;border-radius:28px;box-shadow:0 18px 55px #16426f4f,0 5px 0 #e1c59e;text-align:center}
@@ -78,17 +84,20 @@ body{font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"Hiragino Maru Goth
   </div>
   <div class="meter"><div class="meterlabel"><span>◀ 左に傾く</span><span id="tiltText">バランス</span><span>右に傾く ▶</span></div><div class="track"><div id="needle"></div></div></div>
 </header>
+<div id="nextGoal">つぎの目標：🏠 家の屋根まであと10m</div>
 <div id="notice"></div><div id="danger">⚠️ あぶない！</div>
-<div class="bottom"><div id="instruction" class="instruction">指を離して、どんどん登ろう！</div></div>
+<div class="bottom"><div id="instruction" class="instruction">指を離して登る！ 長押しで倒れないように支えよう</div>
+<div class="holdzones" aria-hidden="true"><div class="holdzone" id="leftZone"><strong>👈 左を長押し</strong><span>ハシゴを右へ押す →</span></div><div class="holdzone" id="rightZone"><strong>右を長押し 👉</strong><span>← ハシゴを左へ押す</span></div></div>
+</div>
 <div class="overlay" id="menu">
   <div class="panel">
     <span class="eyebrow">🎮 GAME LAB</span><div class="emoji">🪜💨</div>
     <h1>のぼれ！<br>無限ハシゴ</h1>
     <p class="lead">グラグラするハシゴを支えながら<br>空の向こうまで登っちゃおう！</p>
     <div class="rules">
-      <div class="rule"><span class="symbol">👆</span><span><strong>長押しで踏ん張る</strong><small>傾いた方向から押し返す。登るのはストップ！</small></span></div>
-      <div class="rule"><span class="symbol">🪜</span><span><strong>指を離すと登る！</strong><small>長く登り続けるほどスピードアップ</small></span></div>
-      <div class="rule"><span class="symbol">🔄</span><span><strong>押し直して反対側へ！</strong><small>押しすぎたら離して、逆から支えよう</small></span></div>
+      <div class="rule"><span class="symbol">👈</span><span><strong>画面左を長押し</strong><small>キャラが左側からハシゴを右へ押す</small></span></div>
+      <div class="rule"><span class="symbol">👉</span><span><strong>画面右を長押し</strong><small>キャラが右側からハシゴを左へ押す</small></span></div>
+      <div class="rule"><span class="symbol">🪜</span><span><strong>指を離して急上昇！</strong><small>離すと自動で登る。連続上昇でどんどん加速！</small></span></div>
     </div>
     <button class="primary" id="startBtn">ゲームスタート ▶</button>
     <div class="footerlogo">1本指のバランスチャレンジ</div>
@@ -119,7 +128,7 @@ body{font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"Hiragino Maru Goth
 'use strict';
 const $=id=>document.getElementById(id);
 const canvas=$('scene'),ctx=canvas.getContext('2d',{alpha:false});
-const ui={height:$('height'),best:$('best'),needle:$('needle'),tiltText:$('tiltText'),instruction:$('instruction'),notice:$('notice'),danger:$('danger'),menu:$('menu'),over:$('over'),pause:$('pauseScreen'),pauseBtn:$('pauseBtn'),soundBtn:$('soundBtn'),finalHeight:$('finalHeight'),resultZone:$('resultZone'),resultBest:$('resultBest'),bestBadge:$('bestBadge')};
+const ui={nextGoal:$('nextGoal'),leftZone:$('leftZone'),rightZone:$('rightZone'),height:$('height'),best:$('best'),needle:$('needle'),tiltText:$('tiltText'),instruction:$('instruction'),notice:$('notice'),danger:$('danger'),menu:$('menu'),over:$('over'),pause:$('pauseScreen'),pauseBtn:$('pauseBtn'),soundBtn:$('soundBtn'),finalHeight:$('finalHeight'),resultZone:$('resultZone'),resultBest:$('resultBest'),bestBadge:$('bestBadge')};
 const zones=[
  [0,'地上','🌱'],[10,'家の屋根','🏠'],[50,'ビルの屋上','🏢'],[150,'タワマン','🏙️'],[333,'東京タワー','🗼'],[634,'スカイツリー','📡'],[3776,'富士山','🗻'],[12000,'成層圏','☁️'],[100000,'宇宙','🚀'],[384400000,'月','🌙'],[149600000000,'太陽','☀️'],[300000000000,'銀河の果て','🌌']
 ];
@@ -145,23 +154,24 @@ function currentZone(h){let index=0;for(let i=1;i<zones.length;i++){if(h>=zones[
 function toast(msg){ui.notice.textContent=msg;ui.notice.classList.add('show');noticeTimer=2.1}
 function reset(){
  g={h:0,theta:.028,omega:0,held:false,push:1,climbTime:0,time:0,zone:0,fallTime:0,fallDir:1,wiggle:0,sideLerp:15,bonus:0};
- holdingPointer=null;state='play';
+ holdingPointer=null;state='play';ui.leftZone.classList.remove('active');ui.rightZone.classList.remove('active');
  ui.menu.classList.add('hidden');ui.over.classList.add('hidden');ui.pause.classList.add('hidden');ui.pauseBtn.style.display='inline-block';
- ui.instruction.textContent='離して登る！ 傾いたら長押し！';ui.instruction.classList.remove('holding');ui.danger.classList.remove('show');ui.notice.classList.remove('show');noticeTimer=0;
+ ui.instruction.textContent='離すと急上昇！ 左右長押しで押し返そう！';ui.instruction.classList.remove('holding');ui.danger.classList.remove('show');ui.notice.classList.remove('show');noticeTimer=0;
  sound(580,.09,'triangle');
 }
-function release(){if(!g.held)return;g.held=false;holdingPointer=null;g.climbTime=0;ui.instruction.textContent='🪜 ぐんぐん登ろう！ 傾いたら長押し';ui.instruction.classList.remove('holding')}
-function hold(id){
+function release(){if(!g.held)return;g.held=false;holdingPointer=null;g.climbTime=0;ui.leftZone.classList.remove('active');ui.rightZone.classList.remove('active');ui.instruction.textContent='🪜 ぐんぐん登ろう！ 傾いたら左右長押し';ui.instruction.classList.remove('holding')}
+function hold(id,x){
  if(state!=='play'||g.held)return;
  g.held=true;holdingPointer=id;g.climbTime=0;
- // This direction stays locked until the finger is released.
- g.push=Math.abs(g.theta)>.015?Math.sign(g.theta):Math.abs(g.omega)>.018?Math.sign(g.omega):Math.sign(Math.sin(g.time*.71)+.05);
- if(!g.push)g.push=1;
- ui.instruction.textContent=g.push>0?'💪 右側から、左へ押し返す！':'💪 左側から、右へ押し返す！';ui.instruction.classList.add('holding');
+ // Left-half press pushes right. Right-half press pushes left. No automatic steering.
+ g.push=x<W/2?-1:1;
+ ui.leftZone.classList.toggle('active',g.push<0);ui.rightZone.classList.toggle('active',g.push>0);
+ ui.instruction.textContent=g.push>0?'💪 右側から左へ押し返す！':'💪 左側から右へ押し返す！';
+ ui.instruction.classList.add('holding');
  sound(180,.04,'triangle',.012);
 }
 function fall(){
- state='fall';g.held=false;holdingPointer=null;g.fallDir=Math.sign(g.theta)||1;g.fallTime=0;
+ state='fall';g.held=false;holdingPointer=null;ui.leftZone.classList.remove('active');ui.rightZone.classList.remove('active');g.fallDir=Math.sign(g.theta)||1;g.fallTime=0;
  ui.pauseBtn.style.display='none';ui.instruction.textContent='💥 ああっ！';ui.instruction.classList.remove('holding');ui.danger.classList.remove('show');sound(155,.35,'sawtooth',.052);
  if(navigator.vibrate)navigator.vibrate([55,40,95]);
 }
@@ -182,20 +192,22 @@ function step(dt){
   if(g.held)g.climbTime=0;
   else{
    g.climbTime+=dt;
-   let base=2.2+Math.min(8,g.climbTime*1.25);
-   let multiplier=1+Math.pow(g.h/220,.78);
+   // Reach the first landmark quickly; long unbroken climbs unlock exhilarating speed.
+   let base=7+Math.min(19,g.climbTime*2.6);
+   let multiplier=1+Math.pow(g.h/190,.57);
    if(g.h>100000)multiplier*=1+23*Math.pow(g.h/100000,.46);
    g.h+=base*multiplier*dt;
   }
   // Nonlinear inverted-pendulum approximation; the hold force is one-way per press.
-  const difficulty=clamp(Math.log1p(g.h)/Math.log(120000),0,1);
-  const gravity=1.72+2.25*difficulty;
-  const disturbance=(Math.sin(g.time*.91+.4)*.075+Math.sin(g.time*2.17)*.046+Math.sin(g.time*.29+1.1)*.04)*(1+1.2*difficulty);
-  const stepWobble=g.held?0:Math.sin(g.time*14)*(.015+.018*difficulty);
-  const force=g.held?-g.push*(2.35+.50*difficulty):0;
-  const accel=gravity*Math.sin(g.theta)+disturbance+stepWobble+force-1.18*g.omega;
+  // A steeper difficulty curve from 20m to 1.2km, rather than only at extreme heights.
+  const difficulty=clamp(Math.log1p(g.h/20)/Math.log1p(1200/20),0,1);
+  const gravity=2.7+3.9*difficulty;
+  const disturbance=(Math.sin(g.time*.91+.4)*.105+Math.sin(g.time*2.17)*.065+Math.sin(g.time*.29+1.1)*.04)*(1+1.45*difficulty);
+  const stepWobble=g.held?0:Math.sin(g.time*14)*(.025+.04*difficulty);
+  const force=g.held?-g.push*(4+2.5*difficulty):0;
+  const accel=gravity*Math.sin(g.theta)+disturbance+stepWobble+force-1.0*g.omega;
   g.omega=clamp(g.omega+accel*dt,-2.5,2.5);g.theta+=g.omega*dt;
-  const threshold=mix(.405,.165,smooth(difficulty));
+  const threshold=mix(.38,.15,smooth(difficulty));
   const tiltRatio=Math.abs(g.theta)/threshold;
   if(tiltRatio>=1){g.theta=Math.sign(g.theta)*threshold;fall()}
   if(g.zone!==currentZone(g.h)){
@@ -203,6 +215,8 @@ function step(dt){
    g.zone=z;
   }
   ui.height.textContent=format(g.h);
+  const next=zones.find(z=>z[0]>g.h);
+  ui.nextGoal.textContent=next?'次の目標 '+next[2]+' '+next[1]+'まであと'+format(next[0]-g.h)+'m':'🚀 どこまでも登ろう！';
   ui.needle.style.left=clamp(50+g.theta/threshold*50,3,97)+'%';
   ui.tiltText.textContent=tiltRatio>.70?'危険！':g.held?'踏ん張り中':'バランス';
   ui.tiltText.classList.toggle('bad',tiltRatio>.7);ui.danger.classList.toggle('show',tiltRatio>.77);
@@ -368,7 +382,7 @@ function frame(ms){
 requestAnimationFrame(frame);
 document.addEventListener('pointerdown',e=>{
  if(state!=='play'||e.target.closest('button')||holdingPointer!==null)return;
- if(e.cancelable)e.preventDefault();hold(e.pointerId);
+ if(e.cancelable)e.preventDefault();hold(e.pointerId,e.clientX);
 },{passive:false});
 window.addEventListener('pointerup',e=>{if(e.pointerId===holdingPointer)release()},{passive:true});
 window.addEventListener('pointercancel',e=>{if(e.pointerId===holdingPointer)release()},{passive:true});
@@ -382,7 +396,7 @@ $('resumeBtn').addEventListener('click',togglePause);
 $('homeBtn').addEventListener('click',()=>{state='menu';ui.pause.classList.add('hidden');ui.menu.classList.remove('hidden');ui.pauseBtn.style.display='none'});
 $('soundBtn').addEventListener('click',()=>{muted=!muted;ui.soundBtn.textContent=muted?'🔇':'🔊';if(!muted)sound(660,.08)});
 $('shareBtn').addEventListener('click',async()=>{
- const message='🪜 のぼれ！無限ハシゴ\n'+format(g.h)+'mまで登った！\nあなたはどこまで登れる？\nhttps://sectorlab-jp.github.io/ladder/';
+ const message='🪜 のぼれ！無限ハシゴ\n'+format(g.h)+'mまで登った！\nあなたはどこまで登れる？\n※制作中のゲームです（一般公開前）';
  if(navigator.share){try{await navigator.share({title:'のぼれ！無限ハシゴ',text:message});return}catch(e){if(e.name==='AbortError')return}}
  if(navigator.clipboard){try{await navigator.clipboard.writeText(message);$('shareBtn').textContent='✅ コピーしたよ！';setTimeout(()=>$('shareBtn').textContent='🔗 記録をシェアする',1800);return}catch(e){}}
  location.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(message);
