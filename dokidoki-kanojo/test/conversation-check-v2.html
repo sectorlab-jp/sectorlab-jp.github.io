@@ -84,9 +84,12 @@ function render(){const scene=SCENES[state.node];const chat=$('chat'),compose=$(
  if(s.photo)addPhoto(chat,s.photo);
  const opts=effectiveOptions(s);
  const title=document.createElement('div');title.className='hint';title.innerHTML=`<span>返事を選んでね</span><span>${state.turn+1}回目</span>`;compose.appendChild(title);
- for(const o of opts){const b=document.createElement('button');b.className='choice';b.innerHTML=`<span class="choiceno">${opts.indexOf(o)+1}.</span>${safe(o.text)}${debug?' <span style="float:right;opacity:.55">('+ (o.secret?'SECRET':(o.delta>0?'+1':o.delta)) +')</span>':''}`;b.onclick=()=>pick(o,s);compose.appendChild(b)}
- if(debug){$('devbox').classList.add('visible');$('devbox').innerHTML=`<p>場面ID：<b>${safe(state.node)}</b> ／ 機嫌：${state.mood} ／ －1回数：${state.miss} ／ 完全正解：${state.perfect}</p><p>記憶：${state.memory} ／ 写真：${state.photo} ／ 「誰？」：${state.who} ／ 好意語：${state.love} ／ 予定：${safe(state.ctx)}</p><p id="audit">47場面の到達可能性、全5エンド、選択肢♡なし、美咲の「笑」なし、着信・通話なしを自動検査済み。文章の自然さは試遊で検証中。</p>`}
- else $('devbox').classList.remove('visible');}
+ for(const o of opts){const b=document.createElement('button');b.className='choice';b.innerHTML=`<span class="choiceno">${o.secret?'4':opts.indexOf(o)+1}.</span>${safe(o.text)}${debug?' <span style="float:right;opacity:.55">('+ (o.secret?'SECRET':(o.delta>0?'+1':o.delta)) +')</span>':''}`;b.onclick=()=>pick(o,s);compose.appendChild(b)}
+ if(debug){
+  $('devbox').classList.add('visible');
+  $('devbox').innerHTML='<p>場面ID：<b>'+safe(state.node)+'</b> ／ 機嫌：'+state.mood+' ／ 疑念：'+state.clues.length+' ／ 完全正解：'+state.perfect+'</p><p>気づいた異変：'+safe(state.clues.join(' / ')||'なし')+' ／ 恋人の記憶を疑った：'+state.memoryDoubt+' ／ シークレット解放：'+canSecret()+'</p><p id="audit">疑念3以上・記憶の疑問・機嫌0以上で隠し④。機嫌－2で死亡。同じ発見の重複加算なし。</p>';
+ }else $('devbox').classList.remove('visible');
+}
 function renderEnd(chat,compose){const block=document.createElement('div');block.className='heroend';const data={
  perfect:['🔒','ずっと、一緒だよ♡','「これで全部、私の思い通りだね♡」\nカチャリ。','BAD END'],
  happy:['♡','いつもありがとう','「アナタといると、私もちゃんと考えられる気がする」\n「いつもありがとう♡」','HAPPY END'],
@@ -94,21 +97,27 @@ function renderEnd(chat,compose){const block=document.createElement('div');block
  death:['、','さよなら。','、\n、\n、\n「……もう、いいよ。」','BAD END'],
  secret:['◈','???','「……」\n「どうして、そんなこと聞くの？」\n「私はアナタの彼女だよ？」\n\n［美咲の名前欄が文字化けしていく］\n\n「……もう、この画面じゃ話しにくいな」\n「今度はアナタの名前、教えて？♡」','SECRET入口 / 続きは別途制作']
  }[state.end];block.innerHTML=`<span style="font-size:35px">${safe(data[0])}</span><h1>${safe(data[1])}</h1><p>${safe(data[2]).replace(/\n/g,'<br>')}</p><small>${safe(data[3])}</small>`;chat.appendChild(block);compose.innerHTML='<button class="choice" id="again">↻ 最初から遊ぶ</button>';$('again').onclick=()=>{state=initial();render()};}
-function pick(o,scene){const secret=o.secret===true;const delta=secret?0:o.delta;
- const miss=state.miss+(delta<0?1:0),mood=secret?-3:Math.max(-2,Math.min(2,state.mood+delta));const perfect=state.perfect&&delta===1;
- const now=date();const record=[...state.history,{who:'misaki',text:scene.text,time:now},...(scene.photo?[{who:'photo',text:scene.photo}]:[]),{who:'me',text:o.text,time:now},{who:'misaki',text:o.reply,time:now}];
- let end=secret?'secret':miss>=2?'death':null;
- if(!end&&['JUDGE','END'].includes(o.next))end=perfect?'perfect':mood===0?'happy':'normal';
- const ctx=state.node==='X01'&&o.i!==2?'cafe':state.node==='SKIRT'?'shopping':state.ctx;
- state={...state,node:end?state.node:o.next,mood,miss,perfect,ctx,turn:state.turn+1,history:record,end,
- memory:state.memory||(['D06','B06','X05','X08'].includes(state.node)&&o.i===1),
- photo:state.photo||(['C07','B07','X06'].includes(state.node)&&o.i===1),
- who:state.who||(state.node==='D06'&&o.i===1),love:state.love||/好き|愛してる|大好き/.test(o.text)};
- render();window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+function pick(o,scene){
+ const secret=o.secret===true,delta=secret?0:o.delta;
+ const clue=secret?null:isClue(state.node,o.i);
+ const clues=clue&&!state.clues.includes(clue)?[...state.clues,clue]:state.clues;
+ const mood=secret?-3:Math.max(-2,Math.min(2,state.mood+delta));
+ const perfect=state.perfect&&delta===1&&!secret;
+ const now=date();
+ const record=[...state.history,{who:"misaki",text:scene.text,time:now},...(scene.photo?[{who:"photo",text:scene.photo}]:[]),{who:"me",text:o.text,time:now},{who:"misaki",text:o.reply,time:now}];
+ let end=secret?"secret":mood<=-2?"death":null;
+ if(!end&&["JUDGE","END"].includes(o.next))end=perfect?"perfect":mood===0?"happy":"normal";
+ const ctx=state.node==="X01"&&o.i!==2?"cafe":state.node==="SKIRT"?"shopping":state.ctx;
+ const memoryDoubt=state.memoryDoubt||["memory","identity"].includes(clue);
+ state={...state,node:end?state.node:o.next,mood,clues,memoryDoubt,perfect,ctx,turn:state.turn+1,history:record,end,lastPhotoQuestion:state.node==="PHOTO_SHADOW"?clue==="shadow":state.lastPhotoQuestion};
+ render();window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
 }
 $('restart').onclick=()=>{state=initial();render();window.scrollTo({top:0})};
 $('debug').onclick=()=>{debug=!debug;render()};
-$('secretwalk').onclick=()=>{state=initial();secretMode=true;render();const guide=SECRET_EXAMPLE.map((step,idx)=>`${idx+1}. [${step.node}] ${step.text}`).join('\n');alert('シークレット確認用の回答例を表示するよ。\n\n'+guide+'\n\nこの順に返答すると隠し選択肢が出現するよ。');};
+$('secretwalk').onclick=()=>{
+ const guide=SECRET_EXAMPLE.map((step,idx)=>String(idx+1)+". ["+step.node+"] "+step.text).join('\n');
+ alert("シークレット到達例のひとつだよ。必ずこの順番でなくても、疑念を3つ集めて機嫌を0以上に戻せばOK！\n\n"+guide);
+};
 $('exportlog').onclick=async()=>{const rows=state.history.map(h=>h.who==='photo'?`[写真] ${h.text}`:`${h.who==='me'?'主人公':'美咲'}：${h.text}`);if(!state.end)rows.push(`美咲：${config(state.node).text}`);const output=`彼女とひみつの時間♡ 会話テスト\n現在：${state.node}／${state.end||'進行中'}\n\n${rows.join('\n\n')}`;try{await navigator.clipboard.writeText(output);alert('会話ログをコピーしたよ。気になる部分を貼り付けてね！')}catch{prompt('会話ログをコピーしてね',output)}};
 render();
 </script><noscript><p style="padding:20px;text-align:center;background:#fff;color:#222">このテストはJavaScriptが必要だよ。SafariやChromeで開いてね。</p></noscript></body></html>
